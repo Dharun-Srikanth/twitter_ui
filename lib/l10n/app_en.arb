@@ -1,0 +1,16 @@
+{
+  "launch_title": "See what's happening in the world right now.",
+  "o_auth_google": "Continue with Google",
+  "create_account": "Create account",
+  "terms": "By signing up, you agree to our ",
+  "terms_link": "Terms, Privacy Policy, and Cookie Use.",
+  "login_message": "Have an account already?",
+  "login_link": "Login",
+
+  "cred_message": "To get started, first enter your phone, email, or @username",
+  "username_hint": "Phone, email, or username",
+  "forget": "Forgot password",
+  "next": "Next",
+  "pass_message": "Enter your password",
+  "password": "Password"
+}
