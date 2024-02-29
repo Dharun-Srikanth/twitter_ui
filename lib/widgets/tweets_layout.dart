@@ -6,8 +6,10 @@ import 'package:get/get.dart';
 import 'package:twitter_ui/api/tweets_api.dart';
 import 'package:twitter_ui/api/user_api.dart';
 import 'package:twitter_ui/constants/controller.dart';
+import 'package:twitter_ui/constants/details.dart';
 import 'package:twitter_ui/controller/data_controller.dart';
 import 'package:twitter_ui/model/tweet_details.dart';
+import 'package:twitter_ui/model/tweet_model.dart';
 import 'package:twitter_ui/page/add_tweet.dart';
 import '../model/tweets.dart';
 import 'package:http/http.dart' as http;
@@ -66,9 +68,12 @@ class _TweetsState extends State<TweetsLayout> {
           _hasMore = false;
         });
       } else {
-        setState(() {
+        setState(() async {
           _isLoading = false;
           Get.find<DataController>().addAPIData(tweetList);
+          List<TweetModel> list = await dbTweets;
+          Get.find<DataController>().insertIntoDbTweet(list);
+          print(list[0].user.name);
           print("dataController.tweetList");
           // _tweetValues.addAll(tweetList);
         });
@@ -81,7 +86,7 @@ class _TweetsState extends State<TweetsLayout> {
     super.initState();
     fetchTweets();
     fetchUser();
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 5), () {
       loadMore();
     });
     _isLoading = true;
@@ -90,6 +95,7 @@ class _TweetsState extends State<TweetsLayout> {
 
   @override
   Widget build(BuildContext context) {
+
     return GetBuilder<DataController>(
       builder: (controller){
         return ListView.builder(

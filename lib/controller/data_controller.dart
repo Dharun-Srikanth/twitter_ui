@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:twitter_ui/model/data.dart';
 import 'package:twitter_ui/model/tweet_details.dart';
+import 'package:twitter_ui/model/tweet_model.dart';
 import 'package:twitter_ui/model/tweets.dart';
 import 'package:twitter_ui/model/user.dart';
 
@@ -10,6 +11,12 @@ class DataController extends GetxController {
   List<Tweets> get tweetList => _dataModel.tweetList;
   List<User> get userList => _dataModel.userList;
   List<TweetDetails> get detailsList => _dataModel.detailList;
+  List<TweetModel> get dbTweetList => _dataModel.allDbTweets;
+
+  void insertIntoDbTweet(List<TweetModel> tweets){
+    _dataModel.addTweetFromDB(tweets);
+    update();
+  }
 
   void addTweetsData(Tweets tweets) {
     _dataModel.addTweet(tweets);
@@ -28,5 +35,6 @@ class DataController extends GetxController {
 
   void addAPIData(List<TweetDetails> tweetDetails) {
     _dataModel.addData(tweetDetails);
+    update();
   }
 }

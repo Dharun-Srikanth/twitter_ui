@@ -10,8 +10,9 @@ import 'package:twitter_ui/widgets/primary_button.dart';
 import 'package:twitter_ui/widgets/tweets_layout.dart';
 
 class AddTweet extends StatelessWidget {
-  const AddTweet({super.key, required this.actionId});
+  AddTweet({super.key, required this.actionId});
   final int actionId;
+  final AddTweetDesign addTweetDesign = AddTweetDesign(1);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,6 +30,7 @@ class AddTweet extends StatelessWidget {
                 onPressed: (){
                   DataController dataController = Get.find<DataController>();
                   if(actionId == 1){
+                    addTweetDesign.addTweet();
                     Tweets tweets = Tweets(id: UniqueKey().hashCode, userId: 101, tweet: addTweetController.text, likes: 0, comments: []);
                     User user = User(id: 101, name: "Dharun", username: "DRN", likedTweets: []);
                     dataController.addTweetsData(tweets);

@@ -6,8 +6,7 @@ import 'package:twitter_ui/model/tweets.dart';
 import 'package:http/http.dart' as http;
 
 Future<List<Tweets>> fetchTweets() async {
-  final response =
-  await http.get(Uri.parse('https://dummyjson.com/posts?limit=100'));
+  final response = await http.get(Uri.parse('https://dummyjson.com/posts?limit=100'));
   if (response.statusCode == 200) {
     var jsonData = json.decode(response.body);
     List<dynamic> values = jsonData['posts'];

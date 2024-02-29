@@ -19,16 +19,16 @@ class LaunchPageDesign extends StatelessWidget {
           ),
            Text(
             AppLocalizations.of(context)!.launch_title,
-            style: const TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
           ),
           const SizedBox(
-            height: 250.0,
+            height: 200.0,
           ),
           SignInButton(
             Buttons.google,
             onPressed: () {},
             text: AppLocalizations.of(context)!.o_auth_google,
-            padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
+            padding: EdgeInsets.symmetric(horizontal: 50.0,vertical: 5),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(100)),
           ),
@@ -40,7 +40,7 @@ class LaunchPageDesign extends StatelessWidget {
                 Container(
                   height: 0.5,
                   color: Colors.grey,
-                  width: 160,
+                  width: 130,
                 ),
                 SizedBox(width: 10,),
                 Text("or"),
@@ -48,7 +48,7 @@ class LaunchPageDesign extends StatelessWidget {
                 Container(
                   height: 0.5,
                   color: Colors.grey,
-                  width: 160,
+                  width: 130,
                 ),
               ],
             ),
@@ -60,7 +60,7 @@ class LaunchPageDesign extends StatelessWidget {
             text: AppLocalizations.of(context)!.create_account,
             textColor: Colors.black,
             fontSize: 16,
-            padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 20.0),
+            padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 10),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(100)),
             backgroundColor: Colors.white,
@@ -80,7 +80,7 @@ class LaunchPageDesign extends StatelessWidget {
                 )
               ]
           )),
-          SizedBox(height: 50,),
+          SizedBox(height: 20,),
           RichText(text: TextSpan(
               children: [
                 TextSpan(

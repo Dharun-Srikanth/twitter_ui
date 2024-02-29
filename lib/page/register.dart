@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:twitter_ui/widgets/register_design.dart';
 
-class RegisterPage extends StatelessWidget {
-  const RegisterPage({super.key});
+import '../widgets/primary_button.dart';
 
+class RegisterPage extends StatelessWidget {
+  RegisterPage({super.key});
+  final RegisterDesign registerDesign = RegisterDesign();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,6 +25,13 @@ class RegisterPage extends StatelessWidget {
         ),
       ),
       body: RegisterDesign(),
+      floatingActionButton:   PrimaryButton(
+          title: "Create account",
+          onPressed: () {
+            registerDesign.saveData();
+            Navigator.pushNamed(context, "loginPage");
+          }),
     );
   }
+
 }

@@ -10,3 +10,8 @@ TextEditingController regCfmPassword = TextEditingController();
 
 ScrollController hideScrollController = ScrollController();
 
+// Form
+final registerFormKey = GlobalKey<FormState>();
+final addTweetFormKey = GlobalKey<FormState>();
+
+

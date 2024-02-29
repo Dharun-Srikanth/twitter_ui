@@ -16,6 +16,7 @@ import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'db/db_helper.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   sqfliteFfiInit();
   if(kIsWeb){
     databaseFactory = databaseFactoryFfiWeb;
@@ -40,10 +41,10 @@ class MainApp extends StatelessWidget {
       locale: Locale(Get.find<LanguageController>().language.value),
       routes: {
         "launchPage":(context) => const AppLaunchPage(),
-        "register":(context) => const RegisterPage(),
+        "register":(context) => RegisterPage(),
         "loginPage":(context) => const LoginPage(),
         "homepage":(context) => const HomePage(),
-        "addTweet":(context) => const AddTweet(actionId: 0,),
+        "addTweet":(context) =>  AddTweet(actionId: 0,),
         "profile":(context) => const ProfilePage(),
         "settings":(context) => const Settings(),
       },
