@@ -7,13 +7,13 @@ import '../db/db_helper.dart';
 import '../model/user_model.dart';
 
 class RegisterDesign extends StatefulWidget {
-  RegisterDesign({super.key});
-
+  RegisterDesign({super.key, required this.registerFormkey});
+  final registerFormkey;
   @override
   State<RegisterDesign> createState() => _RegisterDesignState();
   final DBHelper dbHelper = DBHelper();
   void saveData() {
-    if (registerFormKey.currentState!.validate()) {
+    if (registerFormkey.currentState!.validate()) {
       UserModel user = UserModel(
         id: UniqueKey().hashCode,
         name: regName.text,
@@ -61,7 +61,7 @@ class _RegisterDesignState extends State<RegisterDesign> {
               padding: EdgeInsets.only(
                   top: 58.0, bottom: MediaQuery.of(context).viewInsets.bottom),
               child: Form(
-                key: registerFormKey,
+                key: widget.registerFormkey,
                 child: ListView(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,

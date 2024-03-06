@@ -3,32 +3,31 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:path/path.dart';
 import 'package:twitter_ui/api/tweets_api.dart';
 import 'package:twitter_ui/api/user_api.dart';
 import 'package:twitter_ui/constants/controller.dart';
 import 'package:twitter_ui/constants/details.dart';
 import 'package:twitter_ui/controller/data_controller.dart';
+import 'package:twitter_ui/model/liked_tweets.dart';
 import 'package:twitter_ui/model/tweet_details.dart';
 import 'package:twitter_ui/model/tweet_model.dart';
+import 'package:twitter_ui/model/user_model.dart';
 import 'package:twitter_ui/page/add_tweet.dart';
 import '../model/tweets.dart';
 import 'package:http/http.dart' as http;
 import '../model/user.dart';
 
 class TweetsLayout extends StatefulWidget {
-  const TweetsLayout({super.key, this.tweetDetails});
-  final TweetDetails? tweetDetails;
+  const TweetsLayout({super.key, this.hideScrollController});
+  final ScrollController? hideScrollController;
   @override
   State<TweetsLayout> createState() => _TweetsState();
 }
 
 class _TweetsState extends State<TweetsLayout> {
-  final DataController dataController = Get.find<DataController>();
-
-  final List<TweetDetails> _tweetValues = [];
-
-
-  final _tweetCount = 30;
+  // ScrollController hideScrollController = ScrollController();
+  final _tweetCount = constDataController.allTweetContent.length;
   final _tweetsPerPage = 5;
   int _currentPage = 0;
   int _tweetIndex = 0;
@@ -36,20 +35,14 @@ class _TweetsState extends State<TweetsLayout> {
   bool _isLoading = true;
   bool _hasMore = true;
 
-
-
   Future<List<TweetDetails>> fetch() async {
-    print(dataController.tweetList);
+    constDataController.setData();
     final list = <TweetDetails>[];
     final n = min(_tweetsPerPage, _tweetCount - _currentPage * _tweetsPerPage);
     await Future.delayed(const Duration(seconds: 1), () {
-      int index;
       for (int i = 0; i < n; i++) {
-        index = dataController.userList
-            .indexWhere((element) => element.id == dataController.tweetList[_tweetIndex].userId);
-        list.add(TweetDetails.fromJson(dataController.tweetList[_tweetIndex], dataController.userList[index]));
+        list.add(constDataController.allTweetContent[_tweetIndex]);
         _tweetIndex++;
-        print(index);
       }
     });
     _currentPage++;
@@ -57,25 +50,17 @@ class _TweetsState extends State<TweetsLayout> {
   }
 
   void loadMore() {
-    print("Hello");
     _isLoading = true;
     fetch().then((List<TweetDetails> tweetList) {
-      print(tweetList);
       if (tweetList.isEmpty) {
-        print("tweetList");
         setState(() {
           _isLoading = false;
           _hasMore = false;
         });
       } else {
-        setState(() async {
+        setState(() {
           _isLoading = false;
-          Get.find<DataController>().addAPIData(tweetList);
-          List<TweetModel> list = await dbTweets;
-          Get.find<DataController>().insertIntoDbTweet(list);
-          print(list[0].user.name);
-          print("dataController.tweetList");
-          // _tweetValues.addAll(tweetList);
+          constDataController.allTweetContent.value = tweetList;
         });
       }
     });
@@ -84,56 +69,39 @@ class _TweetsState extends State<TweetsLayout> {
   @override
   void initState() {
     super.initState();
-    fetchTweets();
-    fetchUser();
-    Future.delayed(const Duration(seconds: 5), () {
-      loadMore();
-    });
+    loadMore();
     _isLoading = true;
     _hasMore = true;
   }
 
   @override
   Widget build(BuildContext context) {
-
-    return GetBuilder<DataController>(
-      builder: (controller){
-        return ListView.builder(
+    return GetBuilder<DataController> (builder: (controller) {
+      return ListView.builder(
           shrinkWrap: true,
-            controller: hideScrollController,
-            itemCount: _hasMore ? controller.detailsList.length + 1 : controller.detailsList.length,
-            itemBuilder: (BuildContext context, int index) {
-              if (index >= controller.detailsList.length) {
-                if (!_isLoading) {
-                  loadMore();
-                }
-                return const Center(
-                  child: SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: CircularProgressIndicator(),
-                  ),
-                );
+          controller: widget.hideScrollController,
+          itemCount: _hasMore ? constDataController.allTweetContent.length + 1 : constDataController.allTweetContent.length,
+          itemBuilder: (BuildContext context2, int index) {
+            if (index >= constDataController.allTweetContent.length) {
+              if (!_isLoading) {
+                loadMore();
               }
-              return tweetsDesignLayout(controller.detailsList[index]);
-            });
-      },
-    );
-  }
+              return const Center(
+                child: SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+            // return tweetsDesignLayout(controller.detailsList[index]);
+            return dbTweetsDesignLayout(constDataController.allTweetContent[index], context2);
+          });
+    });
 
-  addLikes(Tweets tweets, bool isUserLiked, User user) {
-    int index = dataController.tweetList.indexOf(tweets);
-    if (!isUserLiked) {
-      dataController.tweetList[index].likes = dataController.tweetList[index].likes+1;
-      user.likedTweets.add(tweets);
-    } else {
-      dataController.tweetList[index].likes = dataController.tweetList[index].likes-1;
-      user.likedTweets.remove(tweets);
-    }
-  }
+      }
 
-
-  Widget tweetsDesignLayout(TweetDetails tweetModel) {
+  Widget dbTweetsDesignLayout(TweetDetails tweetModel, BuildContext context) {
     return Container(
         decoration: BoxDecoration(
             border: Border(
@@ -143,8 +111,8 @@ class _TweetsState extends State<TweetsLayout> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               CircleAvatar(
-                foregroundImage: tweetModel.user.id == 101 ? AssetImage("assets/ME.jpg") : AssetImage("assets/barath.jpg"),
+              CircleAvatar(
+                foregroundImage: tweetModel.userDetails.id == loggedInUser!.id ? AssetImage("assets/ME.jpg") : AssetImage("assets/profile.png"),
                 backgroundColor: Colors.black,
               ),
               const SizedBox(
@@ -158,7 +126,7 @@ class _TweetsState extends State<TweetsLayout> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        tweetModel.user.name,
+                        tweetModel.userDetails.name,
                         style: const TextStyle(
                             fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
@@ -174,19 +142,9 @@ class _TweetsState extends State<TweetsLayout> {
                         width: 8.0,
                       ),
                       Text(
-                        "@${tweetModel.user.username}",
+                        "@${tweetModel.userDetails.username}",
                         style: const TextStyle(fontSize: 14, color: Colors.grey),
                       ),
-                      IconButton(onPressed: (){
-                        showModalBottomSheet(context: context, builder: (BuildContext context)=>
-                          Padding(padding: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).viewInsets.bottom),
-                          child: TextButton(
-                            onPressed: (){},
-                            child: const Text("Edit"),
-                          ),)
-                        );
-                      }, icon: const Icon(Icons.more_vert))
                     ],
                   ),
                   SizedBox(
@@ -195,7 +153,7 @@ class _TweetsState extends State<TweetsLayout> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          tweetModel.tweets.tweet,
+                          tweetModel.tweet['tweet'],
                           style: const TextStyle(fontSize: 16.0),
                         ),
                         const SizedBox(
@@ -211,77 +169,46 @@ class _TweetsState extends State<TweetsLayout> {
                       children: <Widget>[
                         RichText(
                             text: TextSpan(children: [
-                          WidgetSpan(
-                              child: IconButton(
-                                onPressed: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => AddTweet(actionId: tweetModel.tweets.id),));
-                                },
-                                icon: const Icon(
-                                  Icons.mode_comment_outlined,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              alignment: PlaceholderAlignment.middle),
-                          TextSpan(
-                              text:
-                                  tweetModel.tweets.comments.length.toString(),
-                              style: const TextStyle(color: Colors.grey))
-                        ])),
+                              WidgetSpan(
+                                  child: IconButton(
+                                    onPressed: (){
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => AddTweet(actionId: tweetModel.tweet['id']),));
+                                    },
+                                    icon: const Icon(
+                                      Icons.mode_comment_outlined,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  alignment: PlaceholderAlignment.middle),
+                              TextSpan(
+                                  text: tweetModel.comments.length.toString(),
+                                  style: const TextStyle(color: Colors.grey))
+                            ])),
+
                         RichText(
                             text: TextSpan(children: [
-                          const WidgetSpan(
-                              child: Icon(
-                                Icons.compare_arrows_outlined,
-                                color: Colors.grey,
-                              ),
-                              alignment: PlaceholderAlignment.middle),
-                          TextSpan(
-                              text: 100.toString(),
-                              style: const TextStyle(color: Colors.grey))
-                        ])),
-                        RichText(
-                            text: TextSpan(children: [
-                          WidgetSpan(
-                              child: IconButton(
-                                onPressed: () {
-                                  bool isLiked = false;
-                                  if (tweetModel.user.likedTweets
-                                      .contains(tweetModel.tweets)) {
-                                    isLiked = true;
-                                  }
-                                  setState(() {
-                                    addLikes(tweetModel.tweets, isLiked,
-                                        tweetModel.user);
-                                  });
-                                },
-                                icon: !(tweetModel.user.likedTweets
-                                        .contains(tweetModel.tweets))
-                                    ? const Icon(
-                                        Icons.favorite_border_rounded,
-                                        color: Colors.grey,
-                                      )
-                                    : const Icon(
-                                        Icons.favorite,
-                                        color: Colors.pinkAccent,
-                                      ),
-                              ),
-                              alignment: PlaceholderAlignment.middle),
-                          TextSpan(
-                              text: tweetModel.tweets.likes.toString(),
-                              style: TextStyle(color: Colors.grey))
-                        ])),
-                        RichText(
-                            text: TextSpan(children: [
-                          const WidgetSpan(
-                              child: Icon(
-                                Icons.bar_chart,
-                                color: Colors.grey,
-                              ),
-                              alignment: PlaceholderAlignment.middle),
-                          TextSpan(
-                              text: 2000.toString(),
-                              style: const TextStyle(color: Colors.grey))
-                        ])),
+                              WidgetSpan(
+                                  child: IconButton(
+                                    onPressed: () {
+                                      if(tweetModel.isLiked){
+                                        constDbHelper.removeLikedTweets(tweetModel.tweet['id']);
+                                        constDbHelper.removeLikes(tweetModel.tweet['id']);
+                                        loadMore();
+                                      }else {
+                                        TweetModel tweet = TweetModel(tweetModel.tweet['id'], tweetModel.tweet['tweet'], tweetModel.userDetails, tweetModel.tweet['like_count'] );
+                                        constDbHelper.addLikedTweets(LikedTweets(id: UniqueKey().hashCode, tweet: tweet, user: loggedInUser!));
+                                        constDbHelper.addLikes(tweetModel.tweet['id']);
+                                        loadMore();
+                                      }
+                                    },
+                                    icon: tweetModel.isLiked ? Icon(Icons.favorite, color: Colors.pinkAccent,) : Icon(Icons.favorite_outline),
+                                  ),
+                                  alignment: PlaceholderAlignment.middle),
+                              TextSpan(
+                                  text: tweetModel.tweet['like_count'].toString(),
+                                  style: TextStyle(color: Colors.grey))
+                            ])),
+
                         const Icon(
                           Icons.share_outlined,
                           color: Colors.grey,
@@ -296,4 +223,5 @@ class _TweetsState extends State<TweetsLayout> {
           ),
         ));
   }
+
 }

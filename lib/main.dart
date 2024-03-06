@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
+import 'package:twitter_ui/constants/controller.dart';
 import 'package:twitter_ui/controller/data_controller.dart';
 import 'package:twitter_ui/controller/language_controller.dart';
 import 'package:twitter_ui/page/add_tweet.dart';
@@ -23,6 +24,7 @@ void main() {
   }
   DBHelper db = DBHelper();
   db.database;
+  db.addLanguage();
 
   Get.put(DataController());
   Get.put(LanguageController());
@@ -34,11 +36,10 @@ class MainApp extends StatelessWidget {
   const MainApp({super.key});
   @override
   Widget build(BuildContext context) {
-    print(Get.find<LanguageController>().language.value);
     return MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales:AppLocalizations.supportedLocales,
-      locale: Locale(Get.find<LanguageController>().language.value),
+      locale: Locale(constLangController.language.value),
       routes: {
         "launchPage":(context) => const AppLaunchPage(),
         "register":(context) => RegisterPage(),

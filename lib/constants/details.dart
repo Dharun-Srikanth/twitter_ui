@@ -7,3 +7,8 @@ import '../model/tweets.dart';
 late UserModel? loggedInUser;
 final DBHelper constDbHelper = DBHelper();
 Future<List<TweetModel>> dbTweets = constDbHelper.getTweets();
+// UserModel? singleUser;
+//
+// getValue(int id) async{
+//   UserModel userData = (await constDbHelper.getUser(id))!;
+// }

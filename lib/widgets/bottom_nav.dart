@@ -18,7 +18,7 @@ class BottomNavigation extends StatelessWidget {
           BottomNavigationBarItem(
             icon: IconButton(
               onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomePage()), (route) => false);
               },
               icon: Icon(
                 Icons.home_filled,
@@ -31,20 +31,10 @@ class BottomNavigation extends StatelessWidget {
           BottomNavigationBarItem(
               icon: IconButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage()));
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SearchPage()), (route) => false);
                 },
                 icon: Icon(
                   Icons.search,
-                  size: 32.0,
-                  color: Colors.white,
-                ),
-              ),
-              label: ""),
-          BottomNavigationBarItem(
-              icon: IconButton(
-                onPressed: (){},
-                icon: Icon(
-                  Icons.check_box_outlined,
                   size: 32.0,
                   color: Colors.white,
                 ),

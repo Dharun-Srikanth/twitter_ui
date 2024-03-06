@@ -1,17 +1,12 @@
-import 'package:twitter_ui/model/tweets.dart';
-import 'package:twitter_ui/model/user.dart';
+import 'package:twitter_ui/model/user_model.dart';
 
 class TweetDetails{
-  Tweets tweets;
-  User user;
+  final Map<String, dynamic> tweet;
+  final List<Map<String, dynamic>> comments;
+  final UserModel userDetails;
+  final bool isLiked;
 
 
-  TweetDetails({required this.tweets, required this.user});
+  TweetDetails({required this.tweet, required this.comments, required this.userDetails, required this.isLiked});
 
-  factory TweetDetails.fromJson(Tweets tweets, User user) {
-    return TweetDetails(
-        tweets: tweets,
-      user: user
-    );
-  }
 }

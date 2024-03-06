@@ -5,9 +5,10 @@ import '../widgets/primary_button.dart';
 
 class RegisterPage extends StatelessWidget {
   RegisterPage({super.key});
-  final RegisterDesign registerDesign = RegisterDesign();
+  final registerFormKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final RegisterDesign registerDesign = RegisterDesign(registerFormkey: registerFormKey,);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -24,7 +25,7 @@ class RegisterPage extends StatelessWidget {
           height: 32.0,
         ),
       ),
-      body: RegisterDesign(),
+      body: RegisterDesign(registerFormkey: registerFormKey,),
       floatingActionButton:   PrimaryButton(
           title: "Create account",
           onPressed: () {

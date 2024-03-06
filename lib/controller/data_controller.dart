@@ -1,40 +1,38 @@
+import 'dart:ffi';
+
 import 'package:get/get.dart';
+import 'package:twitter_ui/constants/details.dart';
 import 'package:twitter_ui/model/data.dart';
+import 'package:twitter_ui/model/liked_tweets.dart';
 import 'package:twitter_ui/model/tweet_details.dart';
 import 'package:twitter_ui/model/tweet_model.dart';
 import 'package:twitter_ui/model/tweets.dart';
 import 'package:twitter_ui/model/user.dart';
+import 'package:twitter_ui/model/user_model.dart';
 
 class DataController extends GetxController {
-  final DataModel _dataModel = DataModel();
+  RxList<TweetDetails> allTweetContent = <TweetDetails>[].obs;
+  RxList<TweetDetails> currentUserTweets = <TweetDetails>[].obs;
+  RxList<TweetDetails> currentUserLikedTweets = <TweetDetails>[].obs;
+  RxList<TweetDetails> currentUserReplies = <TweetDetails>[].obs;
 
-  List<Tweets> get tweetList => _dataModel.tweetList;
-  List<User> get userList => _dataModel.userList;
-  List<TweetDetails> get detailsList => _dataModel.detailList;
-  List<TweetModel> get dbTweetList => _dataModel.allDbTweets;
-
-  void insertIntoDbTweet(List<TweetModel> tweets){
-    _dataModel.addTweetFromDB(tweets);
+  void setData() async {
+    allTweetContent.value = await constDbHelper.getAllDetails();
     update();
   }
 
-  void addTweetsData(Tweets tweets) {
-    _dataModel.addTweet(tweets);
+  void setUserTweet() async {
+    currentUserTweets.value = allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id).toList();
     update();
   }
 
-  void addUserData(User user) {
-    _dataModel.addUser(user);
+  void setUserLikedTweet() async {
+    currentUserLikedTweets.value = allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id && element.isLiked).toList();
     update();
   }
 
-  void addDetailsData(TweetDetails tweetDetails) {
-    _dataModel.addDetails(tweetDetails);
-    update();
-  }
-
-  void addAPIData(List<TweetDetails> tweetDetails) {
-    _dataModel.addData(tweetDetails);
+  void setUserReplies() async {
+    currentUserReplies.value = allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id && element.comments.isNotEmpty).toList();
     update();
   }
 }

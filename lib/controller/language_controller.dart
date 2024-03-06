@@ -1,16 +1,19 @@
 import 'package:get/get.dart';
-import 'package:twitter_ui/model/language.dart';
+import 'package:twitter_ui/constants/details.dart';
+import 'package:twitter_ui/model/language_model.dart';
 
 class LanguageController extends GetxController {
-  var language = "en".obs;
+  Rx<String> language = "en".obs;
 
-  final LanguageModel _languageModel = LanguageModel();
+  void changeLang(String lang) async{
+    constDbHelper.updateLanguage(lang);
+    setLang();
+    print("Updated");
+    update();
+  }
 
-  LanguageModel get languageModel => _languageModel;
-
-  void changeLang(String lang){
-    language.value = lang;
-    _languageModel.setLang(lang);
+  void setLang() async {
+    language.value = (await constDbHelper.getLang()).lang;
     update();
   }
 }

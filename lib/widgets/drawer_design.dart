@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:twitter_ui/constants/details.dart';
 import 'package:twitter_ui/model/logged_in_details.dart';
+import 'package:twitter_ui/page/app_launch_page.dart';
 
 class DrawerDesign extends StatelessWidget {
   const DrawerDesign({super.key});
@@ -36,27 +37,20 @@ class DrawerDesign extends StatelessWidget {
               Navigator.pushNamed(context, "profile");
             },
           ),
+          Divider(),
           ListTile(
-            leading: const Icon(Icons.workspace_premium_outlined),
-            title: const Text("Premium"),
-            onTap: (){},
-          ),
-          ListTile(
-            leading: const Icon(Icons.group_outlined),
-            title: const Text("Communities"),
-            onTap: (){},
-          ),
-          ListTile(
-            leading: const Icon(Icons.list_alt_outlined),
-            title: const Text("Lists"),
-            onTap: (){},
+            leading: const Icon(Icons.settings_outlined),
+            title: const Text("Settings"),
+            onTap: (){
+              Navigator.pushNamed(context, "settings");
+            },
           ),
           Divider(),
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text("LogOut"),
             onTap: () {
-              Navigator.pushNamed(context, "launchPage");
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const AppLaunchPage()), (route) => false);
             },
           )
         ],

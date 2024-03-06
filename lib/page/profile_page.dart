@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:twitter_ui/page/app_launch_page.dart';
 import 'package:twitter_ui/widgets/profile_design.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -41,8 +42,10 @@ class ProfilePage extends StatelessWidget {
               // radius: 100,
               backgroundColor: Colors.black38,
               child: IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.more_vert),
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const AppLaunchPage()), (route) => false);
+                },
+                icon: const Icon(Icons.logout,),
               ),
             ),
           ),

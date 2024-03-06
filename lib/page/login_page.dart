@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:twitter_ui/page/app_launch_page.dart';
 import 'package:twitter_ui/widgets/login_page_design.dart';
 
 class LoginPage extends StatelessWidget {
@@ -12,7 +13,7 @@ class LoginPage extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.close_sharp, size: 32,),
           onPressed: (){
-            Navigator.pushNamed(context, "launchPage");
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const AppLaunchPage()), (route) => false);
           },
         ),
         title: Image.asset(
