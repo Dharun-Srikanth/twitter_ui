@@ -1,20 +1,21 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:twitter_ui/constants/controller.dart';
-import 'package:twitter_ui/controller/data_controller.dart';
-import 'package:twitter_ui/controller/language_controller.dart';
-import 'package:twitter_ui/page/add_tweet.dart';
-import 'package:twitter_ui/page/homepage.dart';
-import 'package:twitter_ui/page/app_launch_page.dart';
-import 'package:twitter_ui/page/login_page.dart';
-import 'package:twitter_ui/page/profile_page.dart';
-import 'package:twitter_ui/page/register.dart';
-import 'package:twitter_ui/page/settings.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
-import 'db/db_helper.dart';
+import 'package:twitter_ui/core/utils/controller.dart';
+import 'package:twitter_ui/data/datasources/db/db_helper.dart';
+import 'package:twitter_ui/presentation/page/add_tweet.dart';
+import 'package:twitter_ui/presentation/page/app_launch_page.dart';
+import 'package:twitter_ui/presentation/page/homepage.dart';
+import 'package:twitter_ui/presentation/page/login_page.dart';
+import 'package:twitter_ui/presentation/page/profile_page.dart';
+import 'package:twitter_ui/presentation/page/register.dart';
+import 'package:twitter_ui/presentation/page/settings.dart';
+import 'package:twitter_ui/presentation/providers/data_controller.dart';
+import 'package:twitter_ui/presentation/providers/language_controller.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,22 +25,21 @@ void main() {
   }
   DBHelper db = DBHelper();
   db.database;
-  db.addLanguage();
 
   Get.put(DataController());
   Get.put(LanguageController());
 
-  runApp(const MainApp());
+  runApp(const ProviderScope(child: MainApp()));
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends ConsumerWidget {
   const MainApp({super.key});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales:AppLocalizations.supportedLocales,
-      locale: Locale(constLangController.language.value),
+      locale: Locale(ref.watch(langProvider).lang),
       routes: {
         "launchPage":(context) => const AppLaunchPage(),
         "register":(context) => RegisterPage(),

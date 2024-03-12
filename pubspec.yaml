@@ -14,12 +14,15 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_native_splash: ^2.3.10
+  flutter_riverpod: ^2.4.10
+  freezed_annotation: ^2.4.1
   get: ^4.6.6
   hidable: ^1.0.6
   http: ^1.2.0
   intl: ^0.18.1
   path: ^1.8.3
   path_provider: ^2.0.5
+  riverpod_annotation: ^2.3.4
   sign_in_button: ^3.2.0
   sqflite: ^2.3.2
   sqflite_common_ffi: any
@@ -42,6 +45,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
+  riverpod_generator: ^2.3.11
+  build_runner: ^2.4.8
+  custom_lint: ^0.6.2
+  riverpod_lint: ^2.3.9
 
 flutter:
   uses-material-design: true
