@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:twitter_ui/presentation/page/homepage.dart';
+import 'package:twitter_ui/presentation/page/inbox.dart';
+import 'package:twitter_ui/presentation/page/notification.dart';
 import 'package:twitter_ui/presentation/page/search_page.dart';
 
 class BottomNavigation extends StatelessWidget {
@@ -11,14 +13,16 @@ class BottomNavigation extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 0.0),
       child: BottomNavigationBar(
         // currentIndex: index,
-        onTap: (int newIndex) {
-        },
+        onTap: (int newIndex) {},
         type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: IconButton(
-              onPressed: (){
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomePage()), (route) => false);
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomePage()),
+                    (route) => false);
               },
               icon: Icon(
                 Icons.home_filled,
@@ -31,7 +35,10 @@ class BottomNavigation extends StatelessWidget {
           BottomNavigationBarItem(
               icon: IconButton(
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SearchPage()), (route) => false);
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => SearchPage()),
+                      (route) => false);
                 },
                 icon: Icon(
                   Icons.search,
@@ -42,8 +49,12 @@ class BottomNavigation extends StatelessWidget {
               label: ""),
           BottomNavigationBarItem(
               icon: IconButton(
-                onPressed: (){
-
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const NotificationPage()),
+                      (route) => false);
                 },
                 icon: Icon(
                   Icons.notifications_outlined,
@@ -54,8 +65,12 @@ class BottomNavigation extends StatelessWidget {
               label: ""),
           BottomNavigationBarItem(
               icon: IconButton(
-                onPressed: (){
-
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const InboxPage()),
+                          (route) => false);
                 },
                 icon: Icon(
                   Icons.mail_outline,

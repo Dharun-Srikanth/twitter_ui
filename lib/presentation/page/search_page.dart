@@ -60,7 +60,7 @@ class SearchPage extends StatelessWidget {
         ),
       ),
       body: const SearchPageDesign(),
-      bottomNavigationBar: BottomNavigation(),
+      bottomNavigationBar: const BottomNavigation(),
     );
   }
 }

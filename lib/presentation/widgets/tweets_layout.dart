@@ -81,8 +81,6 @@ class _TweetsState extends State<TweetsLayout> {
 
   @override
   Widget build(BuildContext context) {
-    print("hello");
-
     return Consumer(builder: (context, ref, child) {
       final tweets = ref.watch(tweetsProvider);
       final bool isDB = ref.watch(allTweetRiverpod).isDB;
@@ -137,14 +135,14 @@ class _TweetsState extends State<TweetsLayout> {
               }
               // return tweetsDesignLayout(controller.detailsList[index]);
               return dbTweetsDesignLayout(
-                  constDataController.allTweetContent[index], context2);
+                  constDataController.allTweetContent[index], context2, ref);
             });
       });
 
     });
   }
 
-  Widget dbTweetsDesignLayout(TweetDetails tweetModel, BuildContext context) {
+  Widget dbTweetsDesignLayout(TweetDetails tweetModel, BuildContext context, WidgetRef ref) {
     return Container(
         decoration: BoxDecoration(
             border: Border(
@@ -246,6 +244,7 @@ class _TweetsState extends State<TweetsLayout> {
                                     constDbHelper
                                         .removeLikes(tweetModel.tweet['id']);
                                     loadMore();
+
                                   } else {
                                     TweetModel tweet = TweetModel(
                                         tweetModel.tweet['id'],
@@ -258,20 +257,21 @@ class _TweetsState extends State<TweetsLayout> {
                                         user: loggedInUser!));
                                     constDbHelper
                                         .addLikes(tweetModel.tweet['id']);
+                                    ref.read(allTweetRiverpod).addNotifications("${tweetModel.userDetails.name} has Liked your post");
                                     loadMore();
                                   }
                                 },
                                 icon: tweetModel.isLiked
-                                    ? Icon(
+                                    ? const Icon(
                                         Icons.favorite,
                                         color: Colors.pinkAccent,
                                       )
-                                    : Icon(Icons.favorite_outline),
+                                    : const Icon(Icons.favorite_outline),
                               ),
                               alignment: PlaceholderAlignment.middle),
                           TextSpan(
                               text: tweetModel.tweet['like_count'].toString(),
-                              style: TextStyle(color: Colors.grey))
+                              style: const TextStyle(color: Colors.grey))
                         ])),
                         IconButton(
                           onPressed: () {
@@ -401,11 +401,11 @@ class _TweetsState extends State<TweetsLayout> {
                                   }
                                 },
                                 icon: isLiked
-                                    ? Icon(
+                                    ? const Icon(
                                         Icons.favorite,
                                         color: Colors.pinkAccent,
                                       )
-                                    : Icon(Icons.favorite_outline),
+                                    : const Icon(Icons.favorite_outline),
                               ),
                               alignment: PlaceholderAlignment.middle),
                           TextSpan(

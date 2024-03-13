@@ -5,6 +5,7 @@ import 'package:twitter_ui/data/models/tweet_details.dart';
 class RiverpodController extends ChangeNotifier{
   List<TweetDetails> allTweetContent = <TweetDetails>[];
   bool isDB = true;
+  List<String> notificationList = <String>[];
 
   void loadFromAPI() {
     isDB = false;
@@ -18,6 +19,11 @@ class RiverpodController extends ChangeNotifier{
 
   void setData() async {
     allTweetContent = await constDbHelper.getAllDetails();
+    notifyListeners();
+  }
+
+  void addNotifications(String content) {
+    notificationList.add(content);
     notifyListeners();
   }
 }
