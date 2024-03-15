@@ -7,8 +7,8 @@
   "login_message": "Have an account already?",
   "login_link": "Login",
 
-  "cred_message": "To get started, first enter your phone, email, or @username",
-  "username_hint": "Phone, email, or username",
+  "cred_message": "To get started, first enter your @username",
+  "username_hint": "Username",
   "forget": "Forgot password",
   "next": "Next",
   "pass_message": "Enter your password",

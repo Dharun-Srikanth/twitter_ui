@@ -12,24 +12,24 @@ class DrawerDesign extends StatelessWidget {
     LoggedInDetails loggedInDetails = LoggedInDetails();
     return Drawer(
       child: ListView(
-        padding: EdgeInsets.all(0),
         children: [
-           DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.black
-            ),
-              child: UserAccountsDrawerHeader(
-                decoration: BoxDecoration(color: Colors.black),
-                  accountName: Text(loggedInUser!.name, style: TextStyle(fontSize: 18),),
-                  accountEmail: Text("@"+loggedInUser!.username, style: TextStyle(color: Colors.grey, fontSize: 16),),
-              currentAccountPicture: Padding(
-                padding: const EdgeInsets.only(bottom: 28.0),
-                child: CircleAvatar(
-                  backgroundColor: Colors.blueGrey,
+           SizedBox(
+             height: 200,
+             child: DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Colors.black
+              ),
+                child: UserAccountsDrawerHeader(
+                  currentAccountPictureSize: const Size(80, 80),
+                  decoration: const BoxDecoration(color: Colors.black),
+                    accountName: Text(loggedInUser!.name, style: const TextStyle(fontSize: 18),),
+                    accountEmail: Text("@${loggedInUser!.username}", style: const TextStyle(color: Colors.grey, fontSize: 16),),
+                currentAccountPicture: const CircleAvatar(
+                  foregroundImage: AssetImage('assets/ME.jpg'),
                   child: Icon(Icons.person),
-                ),
-              ),)
-          ),
+                ),)
+                       ),
+           ),
           ListTile(
             leading: const Icon(Icons.person_outline),
             title: const Text("Profile"),
@@ -37,7 +37,7 @@ class DrawerDesign extends StatelessWidget {
               Navigator.pushNamed(context, "profile");
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
             leading: const Icon(Icons.settings_outlined),
             title: const Text("Settings"),
@@ -45,7 +45,7 @@ class DrawerDesign extends StatelessWidget {
               Navigator.pushNamed(context, "settings");
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text("LogOut"),

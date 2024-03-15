@@ -306,6 +306,30 @@ class DBHelper {
     return likedList;
   }
 
+  // delete item
+  Future<void> deleteTweet(int id) async {
+    var dbClient = await database;
+    if(dbClient != null) {
+      deleteComment(id);
+      deleteLikes(id);
+      print("summa");
+      await dbClient.rawDelete("DELETE FROM $TWEETS_TABLE WHERE  id= '$id'");
+      print("Deleted");
+
+    }
+  }
+
+  void deleteComment(int id) async {
+    var dbClient = await database;
+    await dbClient!.rawDelete("DELETE FROM $COMMENTS_TABLE WHERE  tweet_id= '$id'");
+  }
+
+  void deleteLikes(int id) async {
+    var dbClient = await database;
+    await dbClient!.rawDelete("DELETE FROM $LIKED_TWEETS_TABLE WHERE  tweet_id= '$id'");
+  }
+
+
   // close db
   Future close() async {
     var dbClient = await database;

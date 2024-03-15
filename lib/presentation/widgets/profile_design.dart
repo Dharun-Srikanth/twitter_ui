@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:get/get.dart';
 import 'package:twitter_ui/core/utils/controller.dart';
 import 'package:twitter_ui/core/utils/details.dart';
@@ -8,19 +9,36 @@ import 'package:twitter_ui/data/models/tweet_model.dart';
 import 'package:twitter_ui/presentation/page/add_tweet.dart';
 import 'package:twitter_ui/presentation/providers/data_controller.dart';
 
-class ProfilePageDesign extends StatelessWidget {
+class ProfilePageDesign extends StatefulWidget {
   const ProfilePageDesign({super.key});
 
+  @override
+  State<ProfilePageDesign> createState() => _ProfilePageDesignState();
+}
+
+class _ProfilePageDesignState extends State<ProfilePageDesign> {
   loadData() {
-    constDataController.setData();
-    constDataController.setUserTweet();
-    constDataController.setUserLikedTweet();
-    constDataController.setUserReplies();
+    setState(() {
+      constDataController.setData();
+      // constDataController.setUserTweet();
+      // constDataController.setUserLikedTweet();
+      // constDataController.setUserReplies();
+    });
+
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadData();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    loadData();
+    // loadData();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -121,42 +139,42 @@ class ProfilePageDesign extends StatelessWidget {
                   Expanded(
                     child: TabBarView(children: [
                       GetBuilder<DataController>(builder: (controller) {
-                                              return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount:
-                            constDataController.currentUserTweets.length,
-                        itemBuilder: (BuildContext context2, int index) {
-                          // return tweetsDesignLayout(controller.detailsList[index]);
-                          return dbTweetsDesignLayout(
-                              constDataController.currentUserTweets[index],
-                              context2);
-                        });
-                                            }),
+                        return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount:
+                                controller.allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id).toList().length,
+                            itemBuilder: (BuildContext context2, int index) {
+                              // return tweetsDesignLayout(controller.detailsList[index]);
+                              return dbTweetsDesignLayout(
+                                  controller.allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id).toList()[index],
+                                  context2);
+                            });
+                      }),
                       GetBuilder<DataController>(builder: (controller) {
-                                              return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount:
-                            constDataController.currentUserReplies.length,
-                        itemBuilder: (BuildContext context2, int index) {
-                          // return tweetsDesignLayout(controller.detailsList[index]);
-                          return dbTweetsDesignLayout(
-                              constDataController.currentUserReplies[index],
-                              context2);
-                        });
-                                            }),
+                        return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount:
+                                controller.allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id && element.comments.isNotEmpty).toList().length,
+                            itemBuilder: (BuildContext context2, int index) {
+                              // return tweetsDesignLayout(controller.detailsList[index]);
+                              return dbTweetsDesignLayout(
+                                  controller.allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id && element.comments.isNotEmpty).toList()[index],
+                                  context2);
+                            });
+                      }),
                       GetBuilder<DataController>(builder: (controller) {
-                                              return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: constDataController
-                            .currentUserLikedTweets.length,
-                        itemBuilder: (BuildContext context2, int index) {
-                          // return tweetsDesignLayout(controller.detailsList[index]);
-                          return dbTweetsDesignLayout(
-                              constDataController
-                                  .currentUserLikedTweets[index],
-                              context2);
-                        });
-                                            }),
+                        return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: controller
+                                .allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id && element.isLiked).toList().length,
+                            itemBuilder: (BuildContext context2, int index) {
+                              // return tweetsDesignLayout(controller.detailsList[index]);
+                              return dbTweetsDesignLayout(
+                                  controller
+                                      .allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id && element.isLiked).toList()[index],
+                                  context2);
+                            });
+                      }),
                     ]),
                   )
                 ],
@@ -267,7 +285,9 @@ class ProfilePageDesign extends StatelessWidget {
                                         tweetModel.tweet['id']);
                                     constDbHelper
                                         .removeLikes(tweetModel.tweet['id']);
-                                    loadData();
+                                    setState(() {
+                                      loadData();
+                                    });
                                   } else {
                                     TweetModel tweet = TweetModel(
                                         tweetModel.tweet['id'],
@@ -280,7 +300,9 @@ class ProfilePageDesign extends StatelessWidget {
                                         user: loggedInUser!));
                                     constDbHelper
                                         .addLikes(tweetModel.tweet['id']);
-                                    loadData();
+                                    setState(() {
+                                      loadData();
+                                    });
                                   }
                                 },
                                 icon: tweetModel.isLiked
@@ -295,15 +317,53 @@ class ProfilePageDesign extends StatelessWidget {
                               text: tweetModel.tweet['like_count'].toString(),
                               style: TextStyle(color: Colors.grey))
                         ])),
-                        const Icon(
-                          Icons.share_outlined,
-                          color: Colors.grey,
-                        )
+                        IconButton(
+                          onPressed: () async {
+                            await FlutterShare.share(
+                                title: 'Hi, I\'m sharing a tweet of ${tweetModel.userDetails.name}',
+                                text: 'Hi, I\'m sharing a tweet of ${tweetModel.userDetails.name}. Check it out. \n \"${tweetModel.tweet['tweet']}\"',
+                                linkUrl: 'https://twitter.com/',
+                                chooserTitle: loggedInUser!.name);
+                            // Share.share(tweetModel.tweet['tweet'], subject: "Tweet from ${tweetModel.userDetails.name}");
+                          },
+                          icon: const Icon(
+                            Icons.share_outlined,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              showModalBottomSheet(context: context, builder: (context){
+                                return Wrap(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(18.0),
+                                      child: ListTile(
+                                        leading: Icon(Icons.delete_outline_rounded),
+                                        title: Text("Delete"),
+                                        onTap: () {
+                                          constDbHelper.deleteTweet(tweetModel.tweet['id']);
+                                          setState(() {
+                                            loadData();
+                                          });
+                                          Navigator.pop(context);
+
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                );
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.more_vert,
+                              color: Colors.grey,
+                            ))
                       ],
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ));

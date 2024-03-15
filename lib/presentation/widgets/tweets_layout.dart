@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:get/get.dart';
 
 // import 'package:share_plus/share_plus.dart';
@@ -27,8 +28,11 @@ class TweetsLayout extends StatefulWidget {
 class _TweetsState extends State<TweetsLayout> {
   final _tweetCount = constDataController.allTweetContent.length;
   final _tweetsPerPage = 5;
+  final _apiTweetsPerPage = 5;
   int _currentPage = 0;
+  int _apiCurrentPage = 0;
   int _tweetIndex = 0;
+  int _apiTweetIndex = 0;
   bool isLiked = false;
 
   bool _isLoading = true;
@@ -59,7 +63,7 @@ class _TweetsState extends State<TweetsLayout> {
       } else {
         setState(() {
           _isLoading = false;
-          constDataController.allTweetContent.value = tweetList;
+          // constDataController.allTweetContent.addAll(tweetList);
         });
       }
     });
@@ -82,6 +86,8 @@ class _TweetsState extends State<TweetsLayout> {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
+      ref.read(allTweetRiverpod).setData();
+      final List<TweetDetails> allDBTweets = ref.watch(allTweetRiverpod).allTweets;
       final tweets = ref.watch(tweetsProvider);
       final bool isDB = ref.watch(allTweetRiverpod).isDB;
       if (!isDB) {
@@ -113,31 +119,55 @@ class _TweetsState extends State<TweetsLayout> {
             });
       }
 
-      return GetBuilder<DataController>(builder: (controller) {
-        return ListView.builder(
-            shrinkWrap: true,
-            controller: widget.hideScrollController,
-            itemCount: _hasMore
-                ? constDataController.allTweetContent.length + 1
-                : constDataController.allTweetContent.length,
-            itemBuilder: (BuildContext context2, int index) {
-              if (index >= constDataController.allTweetContent.length) {
-                if (!_isLoading) {
-                  loadMore();
-                }
-                return const Center(
-                  child: SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: CircularProgressIndicator(),
-                  ),
-                );
+      return ListView.builder(
+          shrinkWrap: true,
+          controller: widget.hideScrollController,
+          itemCount: _hasMore
+              ? allDBTweets.length + 1
+              : allDBTweets.length,
+          itemBuilder: (BuildContext context2, int index) {
+            if (index >= allDBTweets.length) {
+              if (!_isLoading) {
+                loadMore();
               }
-              // return tweetsDesignLayout(controller.detailsList[index]);
-              return dbTweetsDesignLayout(
-                  constDataController.allTweetContent[index], context2, ref);
-            });
-      });
+              return const Center(
+                child: SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+            // return tweetsDesignLayout(controller.detailsList[index]);
+            return dbTweetsDesignLayout(
+                allDBTweets[index], context2, ref);
+          });
+
+      // return GetBuilder<DataController>(builder: (controller) {
+      //   return ListView.builder(
+      //       shrinkWrap: true,
+      //       controller: widget.hideScrollController,
+      //       itemCount: _hasMore
+      //           ? constDataController.allTweetContent.length + 1
+      //           : constDataController.allTweetContent.length,
+      //       itemBuilder: (BuildContext context2, int index) {
+      //         if (index >= constDataController.allTweetContent.length) {
+      //           if (!_isLoading) {
+      //             loadMore();
+      //           }
+      //           return const Center(
+      //             child: SizedBox(
+      //               height: 24,
+      //               width: 24,
+      //               child: CircularProgressIndicator(),
+      //             ),
+      //           );
+      //         }
+      //         // return tweetsDesignLayout(controller.detailsList[index]);
+      //         return dbTweetsDesignLayout(
+      //             constDataController.allTweetContent[index], context2, ref);
+      //       });
+      // });
 
     });
   }
@@ -257,7 +287,7 @@ class _TweetsState extends State<TweetsLayout> {
                                         user: loggedInUser!));
                                     constDbHelper
                                         .addLikes(tweetModel.tweet['id']);
-                                    ref.read(allTweetRiverpod).addNotifications("${tweetModel.userDetails.name} has Liked your post");
+                                    ref.read(allTweetRiverpod).addNotifications("${loggedInUser!.name} has Liked your post");
                                     loadMore();
                                   }
                                 },
@@ -274,7 +304,12 @@ class _TweetsState extends State<TweetsLayout> {
                               style: const TextStyle(color: Colors.grey))
                         ])),
                         IconButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            await FlutterShare.share(
+                                title: 'Hi, I\'m sharing a tweet of ${tweetModel.userDetails.name}',
+                                text: 'Hi, I\'m sharing a tweet of ${tweetModel.userDetails.name}. Check it out. \n \"${tweetModel.tweet['tweet']}\"',
+                                linkUrl: 'https://twitter.com/',
+                                chooserTitle: loggedInUser!.name);
                             // Share.share(tweetModel.tweet['tweet'], subject: "Tweet from ${tweetModel.userDetails.name}");
                           },
                           icon: const Icon(

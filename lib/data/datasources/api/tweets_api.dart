@@ -4,8 +4,10 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:twitter_ui/core/utils/details.dart';
+import 'package:twitter_ui/data/datasources/api/user_api.dart';
 import 'package:twitter_ui/data/models/tweet_model.dart';
 import 'package:twitter_ui/data/models/tweets.dart';
+import 'package:twitter_ui/data/models/user.dart';
 import 'package:twitter_ui/presentation/providers/data_controller.dart';
 
 // Future<List<TweetModel>> fetchTweets() async {
@@ -40,4 +42,8 @@ Future<List<Tweets>> fetchTweets() async {
 
 final tweetsProvider = FutureProvider<List<Tweets>>((ref) async {
   return fetchTweets();
+});
+
+final userProvider = FutureProvider<List<User>>((ref) async {
+  return fetchUser();
 });

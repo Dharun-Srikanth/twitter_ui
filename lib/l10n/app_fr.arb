@@ -7,8 +7,8 @@
   "login_message": "Vous avez déjà un compte ?",
   "login_link": "Se connecter",
 
-  "cred_message": "Pour commencer, entrez d'abord votre téléphone, votre adresse e-mail ou @username",
-  "username_hint": "Téléphone, e-mail ou nom d'utilisateur",
+  "cred_message": "Pour commencer, entrez d'abord votre @utilisateur",
+  "username_hint": "Utilisateur",
   "forget": "Mot de passe oublié",
   "next": "Suivant",
   "pass_message": "Tapez votre mot de passe",
