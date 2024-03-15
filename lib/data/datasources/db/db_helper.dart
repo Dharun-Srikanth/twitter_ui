@@ -307,16 +307,20 @@ class DBHelper {
   }
 
   // delete item
-  Future<void> deleteTweet(int id) async {
+  Future<void> delete(int id) async {
     var dbClient = await database;
     if(dbClient != null) {
       deleteComment(id);
       deleteLikes(id);
-      print("summa");
-      await dbClient.rawDelete("DELETE FROM $TWEETS_TABLE WHERE  id= '$id'");
+      deleteTweet(id);
       print("Deleted");
 
     }
+  }
+
+  void deleteTweet(int id) async {
+    var dbClient = await database;
+    await dbClient!.rawDelete("DELETE FROM $TWEETS_TABLE WHERE  id= '$id'");
   }
 
   void deleteComment(int id) async {

@@ -38,7 +38,6 @@ class _ProfilePageDesignState extends State<ProfilePageDesign> {
 
   @override
   Widget build(BuildContext context) {
-    // loadData();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -142,11 +141,11 @@ class _ProfilePageDesignState extends State<ProfilePageDesign> {
                         return ListView.builder(
                             shrinkWrap: true,
                             itemCount:
-                                controller.allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id).toList().length,
+                                constDataController.allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id).toList().length,
                             itemBuilder: (BuildContext context2, int index) {
                               // return tweetsDesignLayout(controller.detailsList[index]);
                               return dbTweetsDesignLayout(
-                                  controller.allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id).toList()[index],
+                                  constDataController.allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id).toList()[index],
                                   context2);
                             });
                       }),
@@ -154,23 +153,23 @@ class _ProfilePageDesignState extends State<ProfilePageDesign> {
                         return ListView.builder(
                             shrinkWrap: true,
                             itemCount:
-                                controller.allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id && element.comments.isNotEmpty).toList().length,
+                                constDataController.allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id && element.comments.isNotEmpty).toList().length,
                             itemBuilder: (BuildContext context2, int index) {
                               // return tweetsDesignLayout(controller.detailsList[index]);
                               return dbTweetsDesignLayout(
-                                  controller.allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id && element.comments.isNotEmpty).toList()[index],
+                                  constDataController.allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id && element.comments.isNotEmpty).toList()[index],
                                   context2);
                             });
                       }),
                       GetBuilder<DataController>(builder: (controller) {
                         return ListView.builder(
                             shrinkWrap: true,
-                            itemCount: controller
+                            itemCount: constDataController
                                 .allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id && element.isLiked).toList().length,
                             itemBuilder: (BuildContext context2, int index) {
                               // return tweetsDesignLayout(controller.detailsList[index]);
                               return dbTweetsDesignLayout(
-                                  controller
+                                  constDataController
                                       .allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id && element.isLiked).toList()[index],
                                   context2);
                             });
@@ -342,7 +341,7 @@ class _ProfilePageDesignState extends State<ProfilePageDesign> {
                                         leading: Icon(Icons.delete_outline_rounded),
                                         title: Text("Delete"),
                                         onTap: () {
-                                          constDbHelper.deleteTweet(tweetModel.tweet['id']);
+                                          constDbHelper.delete(tweetModel.tweet['id']);
                                           setState(() {
                                             loadData();
                                           });
