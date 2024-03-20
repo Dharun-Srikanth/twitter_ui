@@ -314,7 +314,17 @@ class DBHelper {
       deleteLikes(id);
       deleteTweet(id);
       print("Deleted");
+    }
+  }
 
+  // update item
+  Future<void> updateTweet(int id, String updatedTweet) async {
+    var dbClient = await database;
+    if(dbClient != null) {
+      await dbClient.rawUpdate("UPDATE $TWEETS_TABLE "
+          "SET tweet = ? "
+          "WHERE id= ?;",
+      [updatedTweet, id]);
     }
   }
 

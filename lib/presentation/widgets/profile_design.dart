@@ -17,12 +17,12 @@ class ProfilePageDesign extends StatefulWidget {
 }
 
 class _ProfilePageDesignState extends State<ProfilePageDesign> {
+
+  TextEditingController _textFieldController = TextEditingController();
+
   loadData() {
     setState(() {
       constDataController.setData();
-      // constDataController.setUserTweet();
-      // constDataController.setUserLikedTweet();
-      // constDataController.setUserReplies();
     });
 
   }
@@ -336,17 +336,27 @@ class _ProfilePageDesignState extends State<ProfilePageDesign> {
                                 return Wrap(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.all(18.0),
+                                      padding: const EdgeInsets.all(8.0),
                                       child: ListTile(
-                                        leading: Icon(Icons.delete_outline_rounded),
-                                        title: Text("Delete"),
+                                        leading: const Icon(Icons.edit),
+                                        title: const Text("Edit"),
+                                        onTap: () {
+                                          _displayTextInputDialog(context, tweetModel.tweet['id']);
+                                          // Navigator.pop(context);
+                                        },
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ListTile(
+                                        leading: const Icon(Icons.delete_outline_rounded),
+                                        title: const Text("Delete"),
                                         onTap: () {
                                           constDbHelper.delete(tweetModel.tweet['id']);
                                           setState(() {
                                             loadData();
                                           });
                                           Navigator.pop(context);
-
                                         },
                                       ),
                                     )
@@ -366,5 +376,42 @@ class _ProfilePageDesignState extends State<ProfilePageDesign> {
             ],
           ),
         ));
+  }
+
+  Future<void> _displayTextInputDialog(BuildContext context, int id) async {
+    print("dialog");
+
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('TextField in Dialog'),
+          content: TextField(
+            autofocus: true,
+            controller: _textFieldController,
+            decoration: const InputDecoration(hintText: "Text Field in Dialog"),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('CANCEL'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                print(_textFieldController.text);
+                constDbHelper.updateTweet(id, _textFieldController.text);
+                setState(() {
+                  loadData();
+                });
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
