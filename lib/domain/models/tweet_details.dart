@@ -1,4 +1,4 @@
-import 'package:twitter_ui/data/models/user_model.dart';
+import 'package:twitter_ui/domain/models/user_model.dart';
 
 class TweetDetails{
   final Map<String, dynamic> tweet;

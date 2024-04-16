@@ -12,5 +12,31 @@
   "forget": "Forgot password",
   "next": "Next",
   "pass_message": "Enter your password",
-  "password": "Password"
+  "password": "Password",
+
+  "profile": "Profile",
+  "settings": "Settings",
+  "logout": "LogOut",
+
+  "dataLoad": "Data Load",
+  "dbLoad": "Load data from Database",
+  "apiLoad": "Load data from API",
+  "language": "Language",
+  "en": "English",
+  "fr": "French",
+
+  "posts": "Posts",
+  "replies": "Replies",
+  "likes": "Likes",
+
+  "post": "Post",
+  "postHint": "What's happening?",
+  "reply": "Reply",
+  "replyHint": "Post your reply",
+
+  "search": "Search X",
+
+  "notification": "Notification",
+
+  "chat": "Chat"
 }

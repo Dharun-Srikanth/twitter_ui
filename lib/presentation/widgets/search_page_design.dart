@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:twitter_ui/core/utils/controller.dart';
-import 'package:twitter_ui/data/models/user_model.dart';
+import 'package:twitter_ui/domain/models/user_model.dart';
 import 'package:twitter_ui/presentation/providers/data_controller.dart';
 
 class SearchPageDesign extends StatefulWidget {

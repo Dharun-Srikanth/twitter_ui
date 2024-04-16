@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
-import 'package:twitter_ui/core/utils/controller.dart';
 import 'package:twitter_ui/data/datasources/db/db_helper.dart';
 import 'package:twitter_ui/presentation/page/add_tweet.dart';
 import 'package:twitter_ui/presentation/page/app_launch_page.dart';
@@ -23,8 +22,8 @@ void main() {
   if(kIsWeb){
     databaseFactory = databaseFactoryFfiWeb;
   }
-  DBHelper db = DBHelper();
-  db.database;
+  DBHelper();
+  // db.database;
 
   Get.put(DataController());
   Get.put(LanguageController());
@@ -45,7 +44,7 @@ class MainApp extends ConsumerWidget {
         "register":(context) => RegisterPage(),
         "loginPage":(context) => const LoginPage(),
         "homepage":(context) => const HomePage(),
-        "addTweet":(context) =>  AddTweet(actionId: 0,),
+        "addTweet":(context) =>  const AddTweet(actionId: 0,),
         "profile":(context) => const ProfilePage(),
         "settings":(context) => const Settings(),
       },

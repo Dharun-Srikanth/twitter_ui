@@ -22,7 +22,7 @@ class LoginPage extends StatelessWidget {
           height: 32.0,
         ),
       ),
-      body: LoginPageDesign(),
+      body: const LoginPageDesign(),
     );
   }
 }

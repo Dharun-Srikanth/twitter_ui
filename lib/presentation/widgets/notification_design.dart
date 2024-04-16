@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:twitter_ui/core/utils/controller.dart';
+import 'package:twitter_ui/presentation/providers/notification_provider.dart';
 
 class NotificationDesign extends ConsumerWidget {
   const NotificationDesign({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<String> notifications = ref.watch(allTweetRiverpod).notificationList;
+    final List<String> notifications = ref.watch(notificationProvider).notificationList;
     return ListView.builder(
       shrinkWrap: true,
       itemCount: notifications.length,

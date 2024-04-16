@@ -28,12 +28,12 @@ class LaunchPageDesign extends StatelessWidget {
             Buttons.google,
             onPressed: () {},
             text: AppLocalizations.of(context)!.o_auth_google,
-            padding: EdgeInsets.symmetric(horizontal: 50.0,vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 50.0,vertical: 5),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(100)),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -42,9 +42,9 @@ class LaunchPageDesign extends StatelessWidget {
                   color: Colors.grey,
                   width: 130,
                 ),
-                SizedBox(width: 10,),
-                Text("or"),
-                SizedBox(width: 10,),
+                const SizedBox(width: 10,),
+                const Text("or"),
+                const SizedBox(width: 10,),
                 Container(
                   height: 0.5,
                   color: Colors.grey,
@@ -60,37 +60,37 @@ class LaunchPageDesign extends StatelessWidget {
             text: AppLocalizations.of(context)!.create_account,
             textColor: Colors.black,
             fontSize: 16,
-            padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 10),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(100)),
             backgroundColor: Colors.white,
           ),
-          SizedBox(height: 30,),
+          const SizedBox(height: 30,),
           RichText(text: TextSpan(
               children: [
                 TextSpan(
                     text: AppLocalizations.of(context)!.terms,
-                    style: TextStyle(color: Colors.grey)
+                    style: const TextStyle(color: Colors.grey)
                 ),
                 TextSpan(
                   text: AppLocalizations.of(context)!.terms_link,
-                  style: TextStyle(color: Colors.blueAccent),
-                  recognizer: new TapGestureRecognizer()
+                  style: const TextStyle(color: Colors.blueAccent),
+                  recognizer: TapGestureRecognizer()
                     ..onTap = () {},
                 )
               ]
           )),
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
           RichText(text: TextSpan(
               children: [
                 TextSpan(
                     text: AppLocalizations.of(context)!.login_message,
-                    style: TextStyle(color: Colors.grey)
+                    style: const TextStyle(color: Colors.grey)
                 ),
                 TextSpan(
                     text: AppLocalizations.of(context)!.login_link,
-                    style: TextStyle(color: Colors.blueAccent),
-                    recognizer: new TapGestureRecognizer()
+                    style: const TextStyle(color: Colors.blueAccent),
+                    recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         Navigator.pushNamed(context, "loginPage");
                       }

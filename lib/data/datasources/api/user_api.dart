@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-import 'package:get/get.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:twitter_ui/data/models/user.dart';
+import 'package:twitter_ui/domain/models/user.dart';
 import 'package:http/http.dart' as http;
-import 'package:twitter_ui/presentation/providers/data_controller.dart';
 
 
 @riverpod

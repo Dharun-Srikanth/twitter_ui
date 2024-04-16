@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twitter_ui/presentation/page/app_launch_page.dart';
 import 'package:twitter_ui/presentation/widgets/profile_design.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         // elevation: 0,
         backgroundColor: Colors.blue,
@@ -20,7 +25,7 @@ class ProfilePage extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context);
               },
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
             ),
           ),
         ),
@@ -32,7 +37,7 @@ class ProfilePage extends StatelessWidget {
               backgroundColor: Colors.black38,
               child: IconButton(
                 onPressed: () {},
-                icon: Icon(Icons.search),
+                icon: const Icon(Icons.search),
               ),
             ),
           ),
@@ -51,7 +56,7 @@ class ProfilePage extends StatelessWidget {
           ),
         ],
       ),
-      body: ProfilePageDesign(),
+      body: ProfilePageDesign(ref: ref),
     );
   }
 }

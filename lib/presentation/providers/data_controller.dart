@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:twitter_ui/core/utils/details.dart';
-import 'package:twitter_ui/data/models/tweet_details.dart';
-import 'package:twitter_ui/data/models/user_model.dart';
+import 'package:twitter_ui/domain/models/tweet_details.dart';
+import 'package:twitter_ui/domain/models/user_model.dart';
 
 class DataController extends GetxController {
   RxList<TweetDetails> allTweetContent = <TweetDetails>[].obs;

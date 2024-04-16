@@ -1,8 +1,5 @@
-import 'dart:math';
-
-import 'package:get/get.dart';
 import 'package:twitter_ui/core/utils/details.dart';
-import 'package:twitter_ui/data/models/user_model.dart';
+import 'package:twitter_ui/domain/models/user_model.dart';
 
 class TweetModel {
   late int id;

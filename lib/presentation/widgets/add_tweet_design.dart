@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twitter_ui/core/utils/controller.dart';
 import 'package:twitter_ui/core/utils/details.dart';
-import 'package:twitter_ui/data/datasources/db/db_helper.dart';
-import 'package:twitter_ui/data/models/comments.dart';
-import 'package:twitter_ui/data/models/tweet_model.dart';
+import 'package:twitter_ui/data/repository/db_repository.dart';
+import 'package:twitter_ui/domain/models/comments.dart';
+import 'package:twitter_ui/domain/models/tweet_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:twitter_ui/presentation/providers/db_data_provider.dart';
 
 class AddTweetDesign extends StatelessWidget {
-  AddTweetDesign(this.actionId, {super.key});
+  const AddTweetDesign(this.actionId, {super.key});
   final int actionId;
-  final DBHelper dbHelper = DBHelper();
+  // final DbRepo _dbRepo = DbRepo(DBHelper());
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,7 @@ class AddTweetDesign extends StatelessWidget {
                 ),
               ),
               border: InputBorder.none,
-              hintText: actionId == 0 ?  "What's happening?": "Post your reply",
+              hintText: actionId == 0 ?  AppLocalizations.of(context)!.postHint : AppLocalizations.of(context)!.replyHint,
               hintStyle: const TextStyle(
                   color: Colors.grey,
                   fontSize: 20,
@@ -52,23 +54,23 @@ class AddTweetDesign extends StatelessWidget {
 
 
 
-  void addTweet() async {
-    print(addTweetController.text);
+  void addTweet(WidgetRef ref) async {
+    DbRepo dbRepo = ref.watch(dbRepoProvider);
     if(addTweetFormKey.currentState!.validate()){
       TweetModel tweetModel = TweetModel(UniqueKey().hashCode, addTweetController.text, loggedInUser!, 0);
-      Future<TweetModel> tweet = constDbHelper.addTweet(tweetModel);
-      constDataController.setData();
+      dbRepo.addTweet(tweetModel);
+      dbRepo.fetchProviderData(ref);
       addTweetController.text = "";
     }
   }
 
-  void addComment(int id) async {
-    TweetModel? tweet = await constDbHelper.getTweet(id);
+  void addComment(int id, WidgetRef ref) async {
+    DbRepo dbRepo = ref.watch(dbRepoProvider);
+    TweetModel? tweet = await dbRepo.getTweet(id);
     if(addTweetFormKey.currentState!.validate()){
       Comments comments = Comments(UniqueKey().hashCode, addCommentController.text, loggedInUser!, tweet!);
-      constDbHelper.addComments(comments);
-      print(addCommentController.text);
-      constDataController.setData();
+      dbRepo.addComment(comments);
+      dbRepo.fetchProviderData(ref);
       addCommentController.text = "";
     }
   }

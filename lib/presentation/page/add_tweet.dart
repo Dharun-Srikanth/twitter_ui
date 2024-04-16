@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twitter_ui/presentation/widgets/add_tweet_design.dart';
 import 'package:twitter_ui/presentation/widgets/primary_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class AddTweet extends StatelessWidget {
-  AddTweet({super.key, required this.actionId});
+class AddTweet extends ConsumerWidget {
+  const AddTweet({super.key, required this.actionId});
 
   final int actionId;
-  final AddTweetDesign addTweetDesign = AddTweetDesign(1);
+  final AddTweetDesign addTweetDesign = const AddTweetDesign(1);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -25,12 +27,12 @@ class AddTweet extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: PrimaryButton(
-                title: actionId == 0 ? "Post" : "Reply",
+                title: actionId == 0 ? AppLocalizations.of(context)!.post : AppLocalizations.of(context)!.reply,
                 onPressed: () {
                   if (actionId == 0) {
-                    addTweetDesign.addTweet();
+                    addTweetDesign.addTweet(ref);
                   } else {
-                    addTweetDesign.addComment(actionId);
+                    addTweetDesign.addComment(actionId, ref);
                   }
                   Navigator.pop(context);
                 }),

@@ -1,35 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:get/get.dart';
 import 'package:twitter_ui/core/utils/controller.dart';
 import 'package:twitter_ui/core/utils/details.dart';
-import 'package:twitter_ui/data/models/liked_tweets.dart';
-import 'package:twitter_ui/data/models/tweet_details.dart';
-import 'package:twitter_ui/data/models/tweet_model.dart';
+import 'package:twitter_ui/data/datasources/db/db_helper.dart';
+import 'package:twitter_ui/data/repository/db_repository.dart';
+import 'package:twitter_ui/domain/models/liked_tweets.dart';
+import 'package:twitter_ui/domain/models/tweet_details.dart';
+import 'package:twitter_ui/domain/models/tweet_model.dart';
 import 'package:twitter_ui/presentation/page/add_tweet.dart';
 import 'package:twitter_ui/presentation/providers/data_controller.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProfilePageDesign extends StatefulWidget {
-  const ProfilePageDesign({super.key});
+  const ProfilePageDesign({super.key, required this.ref});
+
+  final WidgetRef ref;
 
   @override
   State<ProfilePageDesign> createState() => _ProfilePageDesignState();
 }
 
 class _ProfilePageDesignState extends State<ProfilePageDesign> {
-
-  TextEditingController _textFieldController = TextEditingController();
+  final TextEditingController _textFieldController = TextEditingController();
+  final DbRepo _dbRepo = DbRepo(DBHelper());
 
   loadData() {
-    setState(() {
-      constDataController.setData();
-    });
-
+    constDataController.setData();
+    _dbRepo.fetchProviderData(widget.ref);
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       loadData();
@@ -70,11 +73,12 @@ class _ProfilePageDesignState extends State<ProfilePageDesign> {
             children: [
               Text(
                 loggedInUser!.name,
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
               Text(
                 "@${loggedInUser!.username}",
-                style: TextStyle(color: Colors.grey, fontSize: 18),
+                style: const TextStyle(color: Colors.grey, fontSize: 18),
               ),
               const SizedBox(
                 height: 20,
@@ -115,23 +119,23 @@ class _ProfilePageDesignState extends State<ProfilePageDesign> {
               length: 3,
               child: Column(
                 children: [
-                  const TabBar(tabs: [
+                  TabBar(tabs: [
                     Tab(
                       child: Text(
-                        "Posts",
-                        style: TextStyle(fontSize: 18),
+                        AppLocalizations.of(context)!.posts,
+                        style: const TextStyle(fontSize: 18),
                       ),
                     ),
                     Tab(
                       child: Text(
-                        "Replies",
-                        style: TextStyle(fontSize: 18),
+                        AppLocalizations.of(context)!.replies,
+                        style: const TextStyle(fontSize: 18),
                       ),
                     ),
                     Tab(
                       child: Text(
-                        "Likes",
-                        style: TextStyle(fontSize: 18),
+                        AppLocalizations.of(context)!.likes,
+                        style: const TextStyle(fontSize: 18),
                       ),
                     ),
                   ]),
@@ -140,38 +144,61 @@ class _ProfilePageDesignState extends State<ProfilePageDesign> {
                       GetBuilder<DataController>(builder: (controller) {
                         return ListView.builder(
                             shrinkWrap: true,
-                            itemCount:
-                                constDataController.allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id).toList().length,
+                            itemCount: constDataController.allTweetContent
+                                .where((element) =>
+                                    element.userDetails.id == loggedInUser!.id)
+                                .toList()
+                                .length,
                             itemBuilder: (BuildContext context2, int index) {
                               // return tweetsDesignLayout(controller.detailsList[index]);
                               return dbTweetsDesignLayout(
-                                  constDataController.allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id).toList()[index],
-                                  context2);
+                                  constDataController.allTweetContent
+                                      .where((element) =>
+                                          element.userDetails.id ==
+                                          loggedInUser!.id)
+                                      .toList()[index]);
                             });
                       }),
                       GetBuilder<DataController>(builder: (controller) {
                         return ListView.builder(
                             shrinkWrap: true,
-                            itemCount:
-                                constDataController.allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id && element.comments.isNotEmpty).toList().length,
+                            itemCount: constDataController.allTweetContent
+                                .where((element) =>
+                                    element.userDetails.id ==
+                                        loggedInUser!.id &&
+                                    element.comments.isNotEmpty)
+                                .toList()
+                                .length,
                             itemBuilder: (BuildContext context2, int index) {
                               // return tweetsDesignLayout(controller.detailsList[index]);
                               return dbTweetsDesignLayout(
-                                  constDataController.allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id && element.comments.isNotEmpty).toList()[index],
-                                  context2);
+                                  constDataController.allTweetContent
+                                      .where((element) =>
+                                          element.userDetails.id ==
+                                              loggedInUser!.id &&
+                                          element.comments.isNotEmpty)
+                                      .toList()[index]);
                             });
                       }),
                       GetBuilder<DataController>(builder: (controller) {
                         return ListView.builder(
                             shrinkWrap: true,
-                            itemCount: constDataController
-                                .allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id && element.isLiked).toList().length,
+                            itemCount: constDataController.allTweetContent
+                                .where((element) =>
+                                    element.userDetails.id ==
+                                        loggedInUser!.id &&
+                                    element.isLiked)
+                                .toList()
+                                .length,
                             itemBuilder: (BuildContext context2, int index) {
                               // return tweetsDesignLayout(controller.detailsList[index]);
                               return dbTweetsDesignLayout(
-                                  constDataController
-                                      .allTweetContent.where((element) => element.userDetails.id==loggedInUser!.id && element.isLiked).toList()[index],
-                                  context2);
+                                  constDataController.allTweetContent
+                                      .where((element) =>
+                                          element.userDetails.id ==
+                                              loggedInUser!.id &&
+                                          element.isLiked)
+                                      .toList()[index]);
                             });
                       }),
                     ]),
@@ -183,7 +210,8 @@ class _ProfilePageDesignState extends State<ProfilePageDesign> {
     );
   }
 
-  Widget dbTweetsDesignLayout(TweetDetails tweetModel, BuildContext context) {
+  Widget dbTweetsDesignLayout(TweetDetails tweetModel) {
+    String tweet = tweetModel.tweet['tweet'].toString();
     return Container(
         decoration: BoxDecoration(
             border: Border(
@@ -237,10 +265,20 @@ class _ProfilePageDesignState extends State<ProfilePageDesign> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          tweetModel.tweet['tweet'],
-                          style: const TextStyle(fontSize: 16.0),
-                        ),
+                        Text.rich(TextSpan(
+                            text: tweet.contains("#")
+                                ? tweet.substring(0, tweet.indexOf('#'))
+                                : tweet,
+                            style: const TextStyle(fontSize: 16.0),
+                            children: [
+                              TextSpan(
+                                text: tweet.contains("#")
+                                    ? tweet.substring(tweet.indexOf("#"))
+                                    : "",
+                                style: const TextStyle(
+                                    fontSize: 16.0, color: Colors.blue),
+                              )
+                            ])),
                         const SizedBox(
                           height: 8.0,
                         ),
@@ -280,10 +318,9 @@ class _ProfilePageDesignState extends State<ProfilePageDesign> {
                               child: IconButton(
                                 onPressed: () {
                                   if (tweetModel.isLiked) {
-                                    constDbHelper.removeLikedTweets(
+                                    _dbRepo.removeLikedTweets(
                                         tweetModel.tweet['id']);
-                                    constDbHelper
-                                        .removeLikes(tweetModel.tweet['id']);
+                                    _dbRepo.removeLikes(tweetModel.tweet['id']);
                                     setState(() {
                                       loadData();
                                     });
@@ -293,12 +330,11 @@ class _ProfilePageDesignState extends State<ProfilePageDesign> {
                                         tweetModel.tweet['tweet'],
                                         tweetModel.userDetails,
                                         tweetModel.tweet['like_count']);
-                                    constDbHelper.addLikedTweets(LikedTweets(
+                                    _dbRepo.addLikedTweets(LikedTweets(
                                         id: UniqueKey().hashCode,
                                         tweet: tweet,
                                         user: loggedInUser!));
-                                    constDbHelper
-                                        .addLikes(tweetModel.tweet['id']);
+                                    _dbRepo.addLikes(tweetModel.tweet['id']);
                                     setState(() {
                                       loadData();
                                     });
@@ -314,13 +350,15 @@ class _ProfilePageDesignState extends State<ProfilePageDesign> {
                               alignment: PlaceholderAlignment.middle),
                           TextSpan(
                               text: tweetModel.tweet['like_count'].toString(),
-                              style: TextStyle(color: Colors.grey))
+                              style: const TextStyle(color: Colors.grey))
                         ])),
                         IconButton(
                           onPressed: () async {
                             await FlutterShare.share(
-                                title: 'Hi, I\'m sharing a tweet of ${tweetModel.userDetails.name}',
-                                text: 'Hi, I\'m sharing a tweet of ${tweetModel.userDetails.name}. Check it out. \n \"${tweetModel.tweet['tweet']}\"',
+                                title:
+                                    'Hi, I\'m sharing a tweet of ${tweetModel.userDetails.name}',
+                                text:
+                                    'Hi, I\'m sharing a tweet of ${tweetModel.userDetails.name}. Check it out. \n "${tweetModel.tweet['tweet']}"',
                                 linkUrl: 'https://twitter.com/',
                                 chooserTitle: loggedInUser!.name);
                             // Share.share(tweetModel.tweet['tweet'], subject: "Tweet from ${tweetModel.userDetails.name}");
@@ -332,37 +370,41 @@ class _ProfilePageDesignState extends State<ProfilePageDesign> {
                         ),
                         IconButton(
                             onPressed: () {
-                              showModalBottomSheet(context: context, builder: (context){
-                                return Wrap(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: ListTile(
-                                        leading: const Icon(Icons.edit),
-                                        title: const Text("Edit"),
-                                        onTap: () {
-                                          _displayTextInputDialog(context, tweetModel.tweet['id']);
-                                          // Navigator.pop(context);
-                                        },
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: ListTile(
-                                        leading: const Icon(Icons.delete_outline_rounded),
-                                        title: const Text("Delete"),
-                                        onTap: () {
-                                          constDbHelper.delete(tweetModel.tweet['id']);
-                                          setState(() {
-                                            loadData();
-                                          });
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                    )
-                                  ],
-                                );
-                              });
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) {
+                                    return Wrap(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: ListTile(
+                                            leading: const Icon(Icons.edit),
+                                            title: const Text("Edit"),
+                                            onTap: () {
+                                              _displayTextInputDialog(tweetModel.tweet['id']);
+                                              // Navigator.pop(context);
+                                            },
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: ListTile(
+                                            leading: const Icon(
+                                                Icons.delete_outline_rounded),
+                                            title: const Text("Delete"),
+                                            onTap: () {
+                                              _dbRepo.deleteTweet(
+                                                  tweetModel.tweet['id']);
+                                              setState(() {
+                                                loadData();
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        )
+                                      ],
+                                    );
+                                  });
                             },
                             icon: const Icon(
                               Icons.more_vert,
@@ -378,14 +420,12 @@ class _ProfilePageDesignState extends State<ProfilePageDesign> {
         ));
   }
 
-  Future<void> _displayTextInputDialog(BuildContext context, int id) async {
-    print("dialog");
-
+  Future<void> _displayTextInputDialog(int id) async {
     return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('TextField in Dialog'),
+          title: const Text('TextField in Dialog'),
           content: TextField(
             autofocus: true,
             controller: _textFieldController,
@@ -399,10 +439,9 @@ class _ProfilePageDesignState extends State<ProfilePageDesign> {
               },
             ),
             TextButton(
-              child: Text('OK'),
+              child: const Text('Update'),
               onPressed: () {
-                print(_textFieldController.text);
-                constDbHelper.updateTweet(id, _textFieldController.text);
+                _dbRepo.updateTweet(id, _textFieldController.text);
                 setState(() {
                   loadData();
                 });

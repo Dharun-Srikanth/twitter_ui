@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:twitter_ui/core/utils/controller.dart';
-import 'package:twitter_ui/core/utils/details.dart';
-import 'package:twitter_ui/data/models/user_model.dart';
 import 'package:twitter_ui/presentation/widgets/bottom_nav.dart';
 import 'package:twitter_ui/presentation/widgets/drawer_design.dart';
 import 'package:twitter_ui/presentation/widgets/search_page_design.dart';
@@ -47,7 +45,7 @@ class SearchPage extends StatelessWidget {
           onChanged: constDataController.filterUsers,
           textAlignVertical: TextAlignVertical.center,
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+            contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
             filled: true,
             fillColor: Colors.grey.shade800,
             border: OutlineInputBorder(
@@ -55,7 +53,7 @@ class SearchPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(50)
             ),
             hintText: "Search X",
-            hintStyle: TextStyle(color: Colors.grey)
+            hintStyle: const TextStyle(color: Colors.grey)
           ),
         ),
       ),

@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import 'package:twitter_ui/data/models/tweet_details.dart';
-import 'package:twitter_ui/data/models/tweets.dart';
-import 'package:twitter_ui/data/models/user.dart';
-import 'package:twitter_ui/data/models/user_model.dart';
+import 'package:twitter_ui/domain/models/tweet_details.dart';
+import 'package:twitter_ui/domain/models/tweets.dart';
+import 'package:twitter_ui/domain/models/user.dart';
+import 'package:twitter_ui/domain/models/user_model.dart';
 
 class DataModel {
   List<Tweets> tweetList = [];
@@ -40,6 +40,5 @@ class DataModel {
 
   void getUserFromDB(UserModel userModel){
     dbSingleUser = userModel.obs;
-    print(dbSingleUser!.value.username+" from data file");
   }
 }

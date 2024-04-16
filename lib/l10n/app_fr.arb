@@ -12,5 +12,31 @@
   "forget": "Mot de passe oublié",
   "next": "Suivant",
   "pass_message": "Tapez votre mot de passe",
-  "password": "Mot de passe"
+  "password": "Mot de passe",
+
+  "profile": "Profil",
+  "settings": "Paramètres",
+  "logout": "Se déconnecter",
+
+  "dataLoad": "Chargement des données",
+  "dbLoad": "Charger des données depuis la base de données",
+  "apiLoad": "Charger des données depuis l'API",
+  "language": "Langue",
+  "en": "Anglais",
+  "fr": "Français",
+
+  "posts": "Des postes",
+  "replies": "réponses",
+  "likes": "Aime",
+
+  "post": "Poste",
+  "postHint": "Ce qui se passe?",
+  "reply": "Répondre",
+  "replyHint": "Postez votre réponse",
+
+  "search": "Rechercher X",
+
+  "notification": "Notification",
+
+  "chat": "Chat"
 }

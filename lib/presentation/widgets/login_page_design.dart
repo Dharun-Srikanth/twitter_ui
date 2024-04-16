@@ -4,7 +4,7 @@ import 'package:toastification/toastification.dart';
 import 'package:twitter_ui/core/utils/details.dart';
 import 'package:twitter_ui/core/utils/regex.dart';
 import 'package:twitter_ui/data/datasources/db/db_helper.dart';
-import 'package:twitter_ui/data/models/user_model.dart';
+import 'package:twitter_ui/data/repository/db_repository.dart';
 import 'package:twitter_ui/presentation/page/homepage.dart';
 import 'package:twitter_ui/presentation/widgets/primary_button.dart';
 
@@ -21,22 +21,27 @@ class _LoginPageDesignState extends State<LoginPageDesign> {
   bool _isPasswordVisible = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  DBHelper dbHelper = DBHelper();
-  loginAuthenticator(String username, String password) async {
-    loggedInUser = (await dbHelper.getLogIn(username, password));
-    List<UserModel> userList = await dbHelper.getUsers();
-    print(userList);
-    if (loggedInUser != null) {
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomePage()), (route) => false);
-    } else {
-      toastification.show(context: context,
-      type: ToastificationType.error,
-        style: ToastificationStyle.minimal,
-        autoCloseDuration: const Duration(seconds: 5),
-        title: Text("User not found!"),
-        description: Text("Username or Password wrong.")
-      );
+  final DbRepo _dbRepo = DbRepo(DBHelper());
 
+  loginAuthenticator(String username, String password) async {
+    loggedInUser = await _dbRepo.login(username, password);
+    if (loggedInUser != null) {
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+            (route) => false);
+      }
+    } else {
+      if (mounted) {
+        toastification.show(
+            context: context,
+            type: ToastificationType.error,
+            style: ToastificationStyle.minimal,
+            autoCloseDuration: const Duration(seconds: 5),
+            title: const Text("User not found!"),
+            description: const Text("Username or Password wrong."));
+      }
     }
   }
 
@@ -58,7 +63,7 @@ class _LoginPageDesignState extends State<LoginPageDesign> {
                   if (!_isNextClicked)
                     Text(
                       AppLocalizations.of(context)!.cred_message,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: Colors.white70),
@@ -66,17 +71,17 @@ class _LoginPageDesignState extends State<LoginPageDesign> {
                   else
                     Text(
                       AppLocalizations.of(context)!.pass_message,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
                           color: Colors.white70),
                     ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   TextFormField(
                     validator: (value) {
-                      if(value == null || value.isEmpty) {
+                      if (value == null || value.isEmpty) {
                         return "This field cannot be empty";
                       }
                       return null;
@@ -84,22 +89,23 @@ class _LoginPageDesignState extends State<LoginPageDesign> {
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     controller: emailController,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                         labelText: AppLocalizations.of(context)!.username_hint,
                         focusColor: Colors.blueAccent,
-                        contentPadding: EdgeInsets.all(25),
-                        labelStyle: TextStyle(fontSize: 20, color: Colors.grey)),
+                        contentPadding: const EdgeInsets.all(25),
+                        labelStyle:
+                            const TextStyle(fontSize: 20, color: Colors.grey)),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   if (_isNextClicked)
                     TextFormField(
                       autofocus: true,
                       validator: (value) {
-                        if(value == null || value.isEmpty) {
+                        if (value == null || value.isEmpty) {
                           return "This Field cannot be empty";
-                        }else if(!(passwordRegExp.hasMatch(value))){
+                        } else if (!(passwordRegExp.hasMatch(value))) {
                           return "Invalid password";
                         }
                         return null;
@@ -121,12 +127,12 @@ class _LoginPageDesignState extends State<LoginPageDesign> {
                               },
                             ),
                           ),
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
                           labelText: AppLocalizations.of(context)!.password,
                           focusColor: Colors.blueAccent,
-                          contentPadding: EdgeInsets.all(25),
-                          labelStyle:
-                              TextStyle(fontSize: 20, color: Colors.grey)),
+                          contentPadding: const EdgeInsets.all(25),
+                          labelStyle: const TextStyle(
+                              fontSize: 20, color: Colors.grey)),
                     ),
                 ],
               ),
@@ -136,7 +142,8 @@ class _LoginPageDesignState extends State<LoginPageDesign> {
               alignment: Alignment.bottomCenter,
               decoration: BoxDecoration(
                   border: Border(
-                      top: BorderSide(color: Colors.grey.shade800, width: 0.5))),
+                      top:
+                          BorderSide(color: Colors.grey.shade800, width: 0.5))),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Row(
@@ -148,7 +155,8 @@ class _LoginPageDesignState extends State<LoginPageDesign> {
                         padding: const EdgeInsets.symmetric(horizontal: 3.0),
                         child: Text(
                           AppLocalizations.of(context)!.forget,
-                          style: const TextStyle(color: Colors.white, fontSize: 18),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 18),
                         ),
                       ),
                     ),
@@ -164,8 +172,8 @@ class _LoginPageDesignState extends State<LoginPageDesign> {
                       PrimaryButton(
                           title: AppLocalizations.of(context)!.login_link,
                           onPressed: () => {
-                                loginAuthenticator(
-                                    emailController.text, passwordController.text)
+                                loginAuthenticator(emailController.text,
+                                    passwordController.text)
                               })
                   ],
                 ),

@@ -60,9 +60,9 @@ class _HomePageState extends State<HomePage> {
         body: TweetsLayout(hideScrollController: hideScrollController),
         bottomNavigationBar: Hidable(
           controller: hideScrollController,
-            preferredWidgetSize: Size.fromHeight(84),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 0.0),
+            preferredWidgetSize: const Size.fromHeight(84),
+          child: const Padding(
+            padding: EdgeInsets.only(bottom: 0.0),
             child: BottomNavigation(),
           )
         ),
@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
               height: 62.0,
               child: FloatingActionButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AddTweet(actionId: 0)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const AddTweet(actionId: 0)));
                 },
                 backgroundColor: Colors.blueAccent,
                 shape: const CircleBorder(),

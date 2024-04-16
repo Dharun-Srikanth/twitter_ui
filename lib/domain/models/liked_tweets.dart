@@ -1,6 +1,6 @@
 
-import 'package:twitter_ui/data/models/tweet_model.dart';
-import 'package:twitter_ui/data/models/user_model.dart';
+import 'package:twitter_ui/domain/models/tweet_model.dart';
+import 'package:twitter_ui/domain/models/user_model.dart';
 
 class LikedTweets {
   int id;

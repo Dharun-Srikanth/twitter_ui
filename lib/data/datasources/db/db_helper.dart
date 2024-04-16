@@ -1,12 +1,11 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:twitter_ui/core/utils/details.dart';
-import 'package:twitter_ui/data/models/comments.dart';
-import 'package:twitter_ui/data/models/language_model.dart';
-import 'package:twitter_ui/data/models/liked_tweets.dart';
-import 'package:twitter_ui/data/models/tweet_details.dart';
-import 'package:twitter_ui/data/models/tweet_model.dart';
-import 'package:twitter_ui/data/models/user_model.dart';
+import 'package:twitter_ui/domain/models/comments.dart';
+import 'package:twitter_ui/domain/models/liked_tweets.dart';
+import 'package:twitter_ui/domain/models/tweet_details.dart';
+import 'package:twitter_ui/domain/models/tweet_model.dart';
+import 'package:twitter_ui/domain/models/user_model.dart';
 
 class DBHelper {
   static const String USER_TABLE = "User";
@@ -15,6 +14,11 @@ class DBHelper {
   static const String LIKED_TWEETS_TABLE = "LikedTweets";
 
   static Database? _database;
+
+
+  DBHelper() {
+    initDatabase();
+  }
 
   Future<Database?> get database async {
     if (_database != null) {
@@ -25,12 +29,16 @@ class DBHelper {
   }
 
   initDatabase() async {
+    if (_database != null) {
+      return _database;
+    }
     String databasesPath = await getDatabasesPath();
     String dbPath = join(databasesPath, "twitter_clone.db");
 
     var db = await openDatabase(dbPath,
         version: 1, onCreate: _onCreate, onConfigure: _onConfigure);
-    return db;
+    _database = db;
+    return _database;
   }
 
   static Future _onConfigure(Database db) async {
@@ -122,7 +130,6 @@ class DBHelper {
     var dbClient = await database;
     if (dbClient != null) {
       comment.id = await dbClient.insert(COMMENTS_TABLE, comment.toJson());
-      print("added comments");
     }
     return comment;
   }
@@ -134,8 +141,7 @@ class DBHelper {
       var result =
           await dbClient.rawQuery("SELECT * FROM $TWEETS_TABLE WHERE id='$id'");
       TweetModel tweet = TweetModel.fromJson(result.first);
-      print(result.first['like_count']);
-      int updateCount = await dbClient.rawUpdate(
+      await dbClient.rawUpdate(
           "UPDATE $TWEETS_TABLE "
           "SET like_count=?"
           "WHERE id=?",
@@ -150,8 +156,7 @@ class DBHelper {
       var result =
           await dbClient.rawQuery("SELECT * FROM $TWEETS_TABLE WHERE id='$id'");
       TweetModel tweet = TweetModel.fromJson(result.first);
-      print(result.first['like_count']);
-      int updateCount = await dbClient.rawUpdate(
+      await dbClient.rawUpdate(
           "UPDATE $TWEETS_TABLE "
           "SET like_count=?"
           "WHERE id=?",
@@ -165,7 +170,6 @@ class DBHelper {
     if (dbClient != null) {
       likedTweets.id =
           await dbClient.insert(LIKED_TWEETS_TABLE, likedTweets.toJson());
-      print("added likedTweets");
     }
     return likedTweets;
   }
@@ -174,11 +178,10 @@ class DBHelper {
   Future removeLikedTweets(int id) async {
     var dbClient = await database;
     if (dbClient != null) {
-      int delete = await dbClient.rawUpdate(
+      await dbClient.rawUpdate(
           "DELETE FROM $LIKED_TWEETS_TABLE "
           "WHERE tweet_id=?",
           [id]);
-      print("removed likedTweets");
     }
   }
 
@@ -281,9 +284,7 @@ class DBHelper {
     if (dbClient != null) {
       var result = await dbClient.rawQuery(
           "SELECT * FROM $USER_TABLE WHERE username='$username' and password='$password'");
-      print(result);
       if (result.isNotEmpty) {
-        print(UserModel.fromJson(result.first).username);
         return UserModel.fromJson(result.first);
       }
     }
@@ -313,7 +314,6 @@ class DBHelper {
       deleteComment(id);
       deleteLikes(id);
       deleteTweet(id);
-      print("Deleted");
     }
   }
 

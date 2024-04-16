@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:twitter_ui/core/utils/controller.dart';
 import 'package:twitter_ui/presentation/page/app_launch_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:twitter_ui/presentation/providers/language_controller.dart';
+import 'package:twitter_ui/presentation/providers/loader_provider.dart';
 
 class Settings extends ConsumerWidget {
   const Settings({super.key});
@@ -27,34 +29,34 @@ class Settings extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
           child: ListView(
             children: [
-              const Text(
-                "Data load",
-                style: TextStyle(fontSize: 20),
+              Text(
+                AppLocalizations.of(context)!.dataLoad,
+                style: const TextStyle(fontSize: 20),
               ),
               ListTile(
                 leading: const Icon(Icons.data_saver_off_outlined),
-                title: const Text("Load data from Database"),
+                title: Text(AppLocalizations.of(context)!.dbLoad),
                 onTap: () {
-                  ref.read(allTweetRiverpod).loadFromDB();
+                  ref.read(loaderProvider).loadFromDB();
                   Navigator.pop(context);
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.data_saver_off_outlined),
-                title: const Text("Load data from API"),
+                title: Text(AppLocalizations.of(context)!.apiLoad),
                 onTap: () {
-                  ref.read(allTweetRiverpod).loadFromAPI();
+                  ref.read(loaderProvider).loadFromAPI();
                   Navigator.pop(context);
                 },
               ),
-              Divider(),
-              const Text(
-                "Language",
-                style: TextStyle(fontSize: 20),
+              const Divider(),
+              Text(
+                AppLocalizations.of(context)!.language,
+                style: const TextStyle(fontSize: 20),
               ),
               ListTile(
                 leading: const Icon(Icons.language),
-                title: const Text("English"),
+                title: Text(AppLocalizations.of(context)!.en),
                 onTap: () {
                   ref.read(langProvider).setEnglish();
                   Navigator.pop(context);
@@ -62,7 +64,7 @@ class Settings extends ConsumerWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.language),
-                title: const Text("French"),
+                title: Text(AppLocalizations.of(context)!.fr),
                 onTap: () {
                   ref.read(langProvider).setFrench();
                   Navigator.pop(context);
@@ -71,7 +73,7 @@ class Settings extends ConsumerWidget {
               const Divider(),
               ListTile(
                 leading: const Icon(Icons.logout),
-                title: const Text("LogOut"),
+                title: Text(AppLocalizations.of(context)!.logout),
                 onTap: () {
                   Navigator.pushAndRemoveUntil(
                       context,

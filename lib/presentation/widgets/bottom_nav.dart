@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:twitter_ui/presentation/page/homepage.dart';
-import 'package:twitter_ui/presentation/page/inbox.dart';
+import 'package:twitter_ui/presentation/page/about.dart';
 import 'package:twitter_ui/presentation/page/notification.dart';
 import 'package:twitter_ui/presentation/page/search_page.dart';
 
@@ -24,7 +24,7 @@ class BottomNavigation extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => const HomePage()),
                     (route) => false);
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.home_filled,
                 size: 32.0,
                 color: Colors.white,
@@ -40,7 +40,7 @@ class BottomNavigation extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => SearchPage()),
                       (route) => false);
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.search,
                   size: 32.0,
                   color: Colors.white,
@@ -56,7 +56,7 @@ class BottomNavigation extends StatelessWidget {
                           builder: (context) => const NotificationPage()),
                       (route) => false);
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.notifications_outlined,
                   size: 32.0,
                   color: Colors.white,
@@ -69,11 +69,11 @@ class BottomNavigation extends StatelessWidget {
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const InboxPage()),
+                          builder: (context) => const AboutPage()),
                           (route) => false);
                 },
-                icon: Icon(
-                  Icons.mail_outline,
+                icon: const Icon(
+                  Icons.info_outline_rounded,
                   size: 32.0,
                   color: Colors.white,
                 ),

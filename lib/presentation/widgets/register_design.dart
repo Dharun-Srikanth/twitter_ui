@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:twitter_ui/core/utils/controller.dart';
 import 'package:twitter_ui/core/utils/regex.dart';
 import 'package:twitter_ui/data/datasources/db/db_helper.dart';
-import 'package:twitter_ui/data/models/user_model.dart';
+import 'package:twitter_ui/data/repository/db_repository.dart';
+import 'package:twitter_ui/domain/models/user_model.dart';
 
 class RegisterDesign extends StatefulWidget {
-  RegisterDesign({super.key, required this.registerFormkey});
-  final registerFormkey;
+  RegisterDesign({super.key, required this.registerFormKey});
+  final GlobalKey<FormState> registerFormKey;
   @override
   State<RegisterDesign> createState() => _RegisterDesignState();
-  final DBHelper dbHelper = DBHelper();
-  void saveData() {
-    if (registerFormkey.currentState!.validate()) {
+  final DbRepo _dbRepo = DbRepo(DBHelper());
+  Future<UserModel?> saveData() async{
+    if (registerFormKey.currentState!.validate()) {
       UserModel user = UserModel(
         id: UniqueKey().hashCode,
         name: regName.text,
@@ -26,12 +27,9 @@ class RegisterDesign extends StatefulWidget {
       regPassword.text = "";
       regCfmPassword.text = "";
 
-      Future<UserModel> future = dbHelper.addUser(user);
-      print("saved");
-      future.then((value) {
-        print(value.name);
-      });
+      return await _dbRepo.addUser(user);
     }
+    return null;
   }
 }
 
@@ -47,7 +45,7 @@ class _RegisterDesignState extends State<RegisterDesign> {
         child: ListView(
           shrinkWrap: true,
           children: [
-            Text(
+            const Text(
               "Create your account",
               style: TextStyle(
                   fontSize: 24,
@@ -59,7 +57,7 @@ class _RegisterDesignState extends State<RegisterDesign> {
               padding: EdgeInsets.only(
                   top: 58.0, bottom: MediaQuery.of(context).viewInsets.bottom),
               child: Form(
-                key: widget.registerFormkey,
+                key: widget.registerFormKey,
                 child: ListView(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -76,7 +74,7 @@ class _RegisterDesignState extends State<RegisterDesign> {
                       },
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       controller: regName,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: "Name",
                           focusColor: Colors.blueAccent,
@@ -84,7 +82,7 @@ class _RegisterDesignState extends State<RegisterDesign> {
                           labelStyle:
                               TextStyle(fontSize: 20, color: Colors.grey)),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     TextFormField(
@@ -99,7 +97,7 @@ class _RegisterDesignState extends State<RegisterDesign> {
                       },
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       controller: regUsername,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: "Username",
                           focusColor: Colors.blueAccent,
@@ -107,7 +105,7 @@ class _RegisterDesignState extends State<RegisterDesign> {
                           labelStyle:
                               TextStyle(fontSize: 20, color: Colors.grey)),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     TextFormField(
@@ -121,7 +119,7 @@ class _RegisterDesignState extends State<RegisterDesign> {
                       },
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       controller: regEmail,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: "Email",
                           focusColor: Colors.blueAccent,
@@ -129,7 +127,7 @@ class _RegisterDesignState extends State<RegisterDesign> {
                           labelStyle:
                               TextStyle(fontSize: 20, color: Colors.grey)),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     TextFormField(
@@ -158,14 +156,14 @@ class _RegisterDesignState extends State<RegisterDesign> {
                               },
                             ),
                           ),
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
                           labelText: "Password",
                           focusColor: Colors.blueAccent,
-                          contentPadding: EdgeInsets.all(20),
+                          contentPadding: const EdgeInsets.all(20),
                           labelStyle:
-                              TextStyle(fontSize: 20, color: Colors.grey)),
+                              const TextStyle(fontSize: 20, color: Colors.grey)),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     TextFormField(
@@ -180,7 +178,7 @@ class _RegisterDesignState extends State<RegisterDesign> {
                       },
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       controller: regCfmPassword,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: "Confirm Password",
                           focusColor: Colors.blueAccent,
@@ -188,7 +186,7 @@ class _RegisterDesignState extends State<RegisterDesign> {
                           labelStyle:
                               TextStyle(fontSize: 20, color: Colors.grey)),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                   ],

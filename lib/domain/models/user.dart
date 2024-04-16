@@ -1,4 +1,4 @@
-import 'package:twitter_ui/data/models/tweets.dart';
+import 'package:twitter_ui/domain/models/tweets.dart';
 
 class User {
   final int id;
